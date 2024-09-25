@@ -12,4 +12,5 @@ player_to_player_port = int(sys.argv[4])
 sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 while True:
-    sent = sock1.sendto(b'Hello', (tracker_ip, tracker_port))
+    command = input("Enter your command here: ")
+    sent = sock1.sendto(command, (tracker_ip, tracker_port))
