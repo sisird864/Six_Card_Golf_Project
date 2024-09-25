@@ -13,4 +13,4 @@ sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 while True:
     command = input("Enter your command here: ")
-    sent = sock1.sendto(command, (tracker_ip, tracker_port))
+    sent = sock1.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
