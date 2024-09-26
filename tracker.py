@@ -25,7 +25,7 @@ def register_func(command, addr):
 def deregister_func(command, addr):
     list1 = command.split(" ")
     for i in range(len(players)):
-        if players[i] == list1[1]:
+        if players[i][0] == list1[1]:
             players.pop(i)
             return
     print("FAILURE")
