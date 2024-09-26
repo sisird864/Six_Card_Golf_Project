@@ -34,6 +34,7 @@ def deregister_func(command, addr):
 
 while True:
     command, addr = sock1.recvfrom(1024)
+    command = command.decode('utf-8')
     if command.startswith("register"): register_func(command, addr)
     elif command == "query players": print(players)
     elif command == "query games": print(games)
