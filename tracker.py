@@ -19,7 +19,7 @@ def register_func(command, addr):
         if list1[1] == i[0]:
             print("FAILURE")
             return
-    tup1 = (list[1], list[2], list[3], list[4])
+    tup1 = (list1[1], list1[2], list1[3], list1[4])
     players.append(tup1)
 
 def deregister_func(command, addr):
