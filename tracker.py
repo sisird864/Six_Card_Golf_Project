@@ -31,12 +31,18 @@ def deregister_func(command, addr):
     print("FAILURE")
     return
 
+def query_players(addr):
+    sock1.sendto(players.encode('utf-8'), (addr[0], addr[1]))
+    return
+def query_games(addr):
+    sock1.sendto(games.encode('utf-8'), (addr[0], addr[1]))
+    return
 
 while True:
     command, addr = sock1.recvfrom(1024)
     command = command.decode('utf-8')
     if command.startswith("register"): register_func(command, addr)
-    elif command == "query players": print(players)
-    elif command == "query games": print(games)
+    elif command == "query players": query_players(addr)
+    elif command == "query games": query_games(addr)
     elif command.startswith("de-register"): deregister_func(command, addr)
     else: print("Invalid Command!")
