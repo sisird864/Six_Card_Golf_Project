@@ -14,6 +14,7 @@ sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 while True:
     command = input("Enter your command here: ")
     sent = sock1.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
-    message, addr = sock1.recvfrom(1024)
-    message = message.decode('utf-8')
-    print(message)
+    if command.startswith("query"):
+        message, addr = sock1.recvfrom(1024)
+        message = message.decode('utf-8')
+        print(message)
