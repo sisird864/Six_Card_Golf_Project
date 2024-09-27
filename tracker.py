@@ -36,12 +36,13 @@ def deregister_func(command, addr):
     return
 
 def query_players(addr):
-    players_str = str(str(len(players))+'\n').join([' '.join(player) for player in players])
-    sock1.sendto(players_str.encode('utf-8'), (addr[0], addr[1]))
+    players_str = '\n'.join([' '.join(player) for player in players])
+    ret_str = f"{len(players)}\n{players_str}"
+    sock1.sendto(ret_str.encode('utf-8'), (addr[0], addr[1]))
     return
 
 def query_games(addr):
-    games_str = str(str(len(games))+'\n').join(games)
+    games_str = '\n'.join(games)
     sock1.sendto(games_str.encode('utf-8'), (addr[0], addr[1]))
     return
 
