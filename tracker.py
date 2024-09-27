@@ -1,6 +1,7 @@
 import socket
 import threading
 import sys
+import random
 
 players = []
 games = []
@@ -53,4 +54,4 @@ while True:
     elif command == "query players": query_players(addr)
     elif command == "query games": query_games(addr)
     elif command.startswith("de-register"): deregister_func(command, addr)
-    else: print("Invalid Command!")
+    else: sock1.sendto("Invalid Command!".encode('utf-8'), (addr[0], addr[1]))
