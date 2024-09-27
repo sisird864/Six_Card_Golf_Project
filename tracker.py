@@ -43,7 +43,7 @@ def query_players(addr):
     return
 
 def query_games(addr):
-    games_str = '\n'.join(games)
+    games_str = '\n'.join([' '.join(game) for game in games])
     ret_str = f"{len(games)}\n{games_str}"
     sock1.sendto(games_str.encode('utf-8'), (addr[0], addr[1]))
     return
