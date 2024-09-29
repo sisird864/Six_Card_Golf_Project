@@ -3,17 +3,20 @@ import threading
 import sys
 import random
 
-players = []
-games = []
+players = [] # list of tuples to store player information
+games = [] # list of tuples to store game information
 
-sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Creates a UDP socket
 
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
 
 
-sock1.bind((ip_address, 40100))
+sock1.bind((ip_address, 40100)) # Uses port 40100 for the socket
 
+# Function to register a player.
+# Adds the player to the players list and returns SUCCESS to the player if the player is not already registered.
+# Otherwise, returns FAILURE to the player if the player is already registered
 def register_func(command, addr):
     list1 = command.split(" ")
     for i in players:
@@ -25,7 +28,9 @@ def register_func(command, addr):
     sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
     return
 
-
+# Function to de-register a player.
+# Removes the player from the players list and returns SUCCESS to the player if the player is registered.
+# Otherwise, returns FAILURE to the player if the player is not registered
 def deregister_func(command, addr):
     list1 = command.split(" ")
     for i in range(len(players)):
@@ -36,18 +41,21 @@ def deregister_func(command, addr):
     sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
     return
 
+# Returns the amount of registered players as well as each registered player's information to the player.
 def query_players(addr):
     players_str = '\n'.join([' '.join(player) for player in players])
     ret_str = f"{len(players)}\n{players_str}"
     sock1.sendto(ret_str.encode('utf-8'), (addr[0], addr[1]))
     return
 
+# Returns the amount of games as well as each games' information to the player
 def query_games(addr):
     games_str = '\n'.join([' '.join(game) for game in games])
     ret_str = f"{len(games)}\n{games_str}"
     sock1.sendto(ret_str.encode('utf-8'), (addr[0], addr[1]))
     return
 
+# Main loop to receive messages from players and calls the appropriate functions for each command that was received from the player
 while True:
     command, addr = sock1.recvfrom(1024)
     command = command.decode('utf-8')
