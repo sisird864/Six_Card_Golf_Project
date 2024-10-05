@@ -10,17 +10,20 @@ if len(sys.argv) != 3:
 tracker_ip = sys.argv[1]
 tracker_port = int(sys.argv[2])
 
-sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Creates a UDP socket
-
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
-sock1.bind((ip_address, 40200)) # Uses port 40100 for the socket
+
+sock_tracker = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Creates a UDP socket for communicating with the tracker
+sock_tracker.bind((ip_address, 40200)) # Uses port 40200 for the socket
+
+sock_player = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Creates a UDP socket for communicating with other players
+sock_player.bind((ip_address, 40300)) # Uses port 40300 for the socket
 
 # Main loop for user to send the messages to the tracker.
 # Receives and outputs the messages from the tracker.
 while True:
     command = input("Enter your command here: ")
-    sent = sock1.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
-    message, addr = sock1.recvfrom(1024)
+    sent = sock_tracker.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
+    message, addr = sock_tracker.recvfrom(1024)
     message = message.decode('utf-8')
     print(message)
