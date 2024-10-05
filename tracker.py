@@ -76,7 +76,15 @@ def start_game(command, addr):
             sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
             return
 
-
+def end_game(command, addr):
+    list1 = command.split(" ")
+    for i in games:
+        if i[0] == list1[1] and i[1] == list1[2]:
+            games.remove(i)
+            sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
+            return
+        sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
+        return
 
 # Main loop to receive messages from players and calls the appropriate functions for each command that was received from the player
 while True:
@@ -87,4 +95,5 @@ while True:
     elif command == "query games": query_games(addr)
     elif command.startswith("de-register"): deregister_func(command, addr)
     elif command.startswith("start"): start_game(command, addr)
+    elif command.startswith(("end")): end_game(command, addr)
     else: sock1.sendto("Invalid Command!".encode('utf-8'), (addr[0], addr[1]))
