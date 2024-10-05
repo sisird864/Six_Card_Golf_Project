@@ -55,6 +55,29 @@ def query_games(addr):
     sock1.sendto(ret_str.encode('utf-8'), (addr[0], addr[1]))
     return
 
+def start_game(command, addr):
+    dealer_tuple = ()
+    list1 = command.split(" ")
+    for i in players:
+        if i[0] == list1[2]:
+            dealer_tuple = i
+    if dealer_tuple == ():
+        sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
+        return
+    while True:
+        game_id = random.randint(0, 999)
+        unique = True
+        for i in games:
+            if i[0] == game_id:
+                unique = False
+                break
+        if unique:
+            games.append((game_id, list1[2], list1[3], list1[4]))
+            sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
+            return
+
+
+
 # Main loop to receive messages from players and calls the appropriate functions for each command that was received from the player
 while True:
     command, addr = sock1.recvfrom(1024)
@@ -63,4 +86,5 @@ while True:
     elif command == "query players": query_players(addr)
     elif command == "query games": query_games(addr)
     elif command.startswith("de-register"): deregister_func(command, addr)
+    elif command.startswith("start"): start_game(command, addr)
     else: sock1.sendto("Invalid Command!".encode('utf-8'), (addr[0], addr[1]))
