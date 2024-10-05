@@ -12,6 +12,10 @@ tracker_port = int(sys.argv[2])
 
 sock1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Creates a UDP socket
 
+hostname = socket.gethostname()
+ip_address = socket.gethostbyname(hostname)
+sock1.bind((ip_address, 40200)) # Uses port 40100 for the socket
+
 # Main loop for user to send the messages to the tracker.
 # Receives and outputs the messages from the tracker.
 while True:
