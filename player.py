@@ -50,8 +50,8 @@ while True:
         print(message)
 
         # If the game starts successfully, receive the players' information
-        if "Game ID:" in message:
-            players_info = message.splitlines()[1:]  # Assuming player info starts from the second line
+        if command.startswith("start"):
+            players_info = message.splitlines()[2:]  # Assuming player info starts from the second line
             print("Players in the game:")
             for player in players_info:
                 print(player)
