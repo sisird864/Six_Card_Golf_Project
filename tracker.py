@@ -119,8 +119,8 @@ def end_game(command, addr):
             sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
             print(free_players)
             return
-        sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
-        return
+    sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
+    return
 
 # Main loop to receive messages from players and calls the appropriate functions for each command that was received from the player
 while True:
