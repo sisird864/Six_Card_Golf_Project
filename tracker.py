@@ -111,7 +111,7 @@ def start_game(command, addr):
 def end_game(command, addr):
     list1 = command.split(" ")
     for i in games:
-        if i[0] == list1[1] and i[1] == list1[2]:
+        if str(i[0]) == list1[1] and i[1] == list1[2]:
             games.remove(i)
             sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
             return
