@@ -99,7 +99,7 @@ def start_game(command, addr):
 
             # Prepare the response string with game ID and players
             response = f"SUCCESS\nGame ID: {game_id}\n"
-            response += '\n'.join([f"{pl[0]} {pl[1]} {pl[2]}" for pl in players_for_game])
+            response += '\n'.join([f"{pl[0]} {pl[1]} {pl[3]}" for pl in players_for_game])
 
             # Send the response only to the dealer
             sock1.sendto(response.encode('utf-8'), (dealer_tuple[1], int(dealer_tuple[2])))
