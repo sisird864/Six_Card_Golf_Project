@@ -95,7 +95,7 @@ def start_game(command, addr):
                         break
 
             # Add the game to the list of games
-            games.append((game_id, list1[2], list1[3], list1[4]))
+            games.append((game_id, list1[2], list1[3], list1[4], players_for_game))
 
             # Prepare the response string with game ID and players
             response = f"SUCCESS\nGame ID: {game_id}\n"
@@ -112,6 +112,8 @@ def end_game(command, addr):
     list1 = command.split(" ")
     for i in games:
         if str(i[0]) == list1[1] and i[1] == list1[2]:
+            for p in i[4]:
+                free_players.add(p)
             games.remove(i)
             sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
             return
