@@ -63,13 +63,14 @@ def start_game(command, addr):
     dealer_tuple = ()
     list1 = command.split(" ")
 
-    # Check if dealer is registered
+    # Check if the dealer is registered
     for i in players:
         if i[0] == list1[2]:
             dealer_tuple = i
 
-    # Additional conditions for game start failure
-    if dealer_tuple == () or int(list1[3]) > len(free_players) or (int(list1[3]) < 2 or int(list1[3]) > 4) or (int(list1[4]) < 1 or int(list1[4]) > 9):
+    # Validate the command's parameters
+    if dealer_tuple == () or int(list1[3]) > len(free_players) or (int(list1[3]) < 2 or int(list1[3]) > 4) or (
+            int(list1[4]) < 1 or int(list1[4]) > 9):
         sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
         return
 
@@ -82,32 +83,26 @@ def start_game(command, addr):
                 unique = False
                 break
         if unique:
-            # Select players for the game
             players_for_game = [dealer_tuple]
             free_players.remove(dealer_tuple[0])
 
-            for _ in range(int(list1[3])):  # Ensure this is integer for player count
+            # Select n random players
+            for i in range(int(list1[3])):
                 temp = free_players.pop()
                 for pl in players:
                     if pl[0] == temp:
                         players_for_game.append(pl)
                         break
 
-            # Add game to games list (game_id, dealer, num_players, other info)
+            # Add the game to the list of games
             games.append((game_id, list1[2], list1[3], list1[4]))
 
-            # Prepare the message for players in the game, with each player on a new line
-            players_info = "\n".join([f"{player[0]} {player[2]} {player[3]}" for player in players_for_game])
-            game_start_message = f"START_GAME {game_id}\n{players_info}"
+            # Prepare the response string with game ID and players
+            response = f"SUCCESS\nGame ID: {game_id}\n"
+            response += '\n'.join([f"{pl[0]} {pl[1]} {pl[2]}" for pl in players_for_game])
 
-            # Send the message to each player in the game
-            for player in players_for_game:
-                player_ip = player[2]
-                player_port = int(player[3])
-                sock1.sendto(game_start_message.encode('utf-8'), (player_ip, player_port))
-
-            # Notify the original requester of success
-            sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
+            # Send the response only to the dealer
+            sock1.sendto(response.encode('utf-8'), (dealer_tuple[1], int(dealer_tuple[2])))
             return
 
 
