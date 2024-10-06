@@ -121,12 +121,11 @@ def end_game(command, addr):
 # Main loop to receive messages from players and calls the appropriate functions for each command that was received from the player
 while True:
     command, addr = sock1.recvfrom(1024)
-    print(addr)
     command = command.decode('utf-8')
     if command.startswith("register"): register_func(command, addr)
     elif command == "query players": query_players(addr)
     elif command == "query games": query_games(addr)
     elif command.startswith("de-register"): deregister_func(command, addr)
     elif command.startswith("start"): start_game(command, addr)
-    elif command.startswith(("end")): end_game(command, addr)
+    elif command.startswith("end"): end_game(command, addr)
     else: sock1.sendto("Invalid Command!".encode('utf-8'), (addr[0], addr[1]))
