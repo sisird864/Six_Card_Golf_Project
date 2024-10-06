@@ -103,6 +103,7 @@ def start_game(command, addr):
 
             # Send the response only to the dealer
             sock1.sendto(response.encode('utf-8'), (dealer_tuple[1], int(dealer_tuple[2])))
+            print(free_players)
             return
 
 
@@ -116,6 +117,7 @@ def end_game(command, addr):
                 free_players.add(p)
             games.remove(i)
             sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
+            print(free_players)
             return
         sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
         return
