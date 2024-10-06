@@ -43,7 +43,7 @@ while True:
     command = input("Enter your command here: ")
 
     # Check if it's a command for the tracker
-    if command.startswith("start") or command == "query players" or command == "query games" or command.startswith("de-register") or command.startswith("start") or command.startswith("end"):
+    if command.startswith("register") or command == "query players" or command == "query games" or command.startswith("de-register") or command.startswith("start") or command.startswith("end"):
         sock_tracker.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
         message, addr = sock_tracker.recvfrom(1024)
         message = message.decode('utf-8')
