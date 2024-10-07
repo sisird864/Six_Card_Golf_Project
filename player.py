@@ -52,9 +52,12 @@ while True:
         # If the game starts successfully, receive the players' information
         if command.startswith("start"):
             players_info = message.splitlines()[2:]  # Assuming player info starts from the second line
-            print("Players in the game:")
-            for player in players_info:
-                print(player)
+            for player in players_info[1:]:
+                player_info = player.split()
+                player_ip = player_info[1]
+                player_port = int(player_info[2])
+                sock_player.sendto(str(players_info).encode('utf-8'), (player_ip, player_port))
+
 
     else:
         # If the game has started, allow interaction with other players
