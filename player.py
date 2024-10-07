@@ -16,12 +16,10 @@ p_port = int(sys.argv[4])
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
 
-sock_tracker = socket.socket(socket.AF_INET,
-                             socket.SOCK_DGRAM)  # Creates a UDP socket for communicating with the tracker
+sock_tracker = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP socket for tracker communication
 sock_tracker.bind((ip_address, t_port))  # Assigns port for the socket
 
-sock_player = socket.socket(socket.AF_INET,
-                            socket.SOCK_DGRAM)  # Creates a UDP socket for communicating with other players
+sock_player = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP socket for peer-to-peer communication
 sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 
 # Store player information after starting the game
@@ -34,11 +32,19 @@ def receive_messages():
         message = message.decode('utf-8')
         print(f"Received from {addr}: {message}")
 
+        # Check if the message contains player information (broadcasted by the dealer)
+        if message.startswith("PLAYER_INFO"):
+            global players_info
+            players_info = message.splitlines()[1:]  # Store player information from the broadcast
+            print("Players in the game:")
+            for player in players_info:
+                print(player)
 
-# Start the thread for receiving messages from other players
+
+# Start a thread for receiving messages from other players
 threading.Thread(target=receive_messages, daemon=True).start()
 
-# Main loop for user to send the messages to the tracker or other players.
+# Main loop for sending messages to the tracker or other players.
 while True:
     command = input("Enter your command here: ")
 
@@ -49,10 +55,14 @@ while True:
         message = message.decode('utf-8')
         print(message)
 
-        # If the game starts successfully, receive the players' information
+        # If the game starts successfully and you're the dealer
         if command.startswith("start"):
-            players_info = message.splitlines()[2:]  # Assuming player info starts from the second line
+            players_info = message.splitlines()[2:]  # Assume player info starts from the second line
             print("Players in the game:")
+            for player in players_info:
+                print(player)
+
+            # Broadcast player information to all other players
             player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
             for player in players_info[1:]:  # Skip the first entry (dealer)
                 player_info = player.split()
