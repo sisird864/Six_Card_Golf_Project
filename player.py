@@ -36,9 +36,10 @@ def receive_messages():
         if message.startswith("PLAYER_INFO"):
             global players_info
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
-            print("Players in the game:")
+            print("\nPlayers in the game:")
             for player in players_info:
                 print(player)
+            print("\n")
 
 
 # Start a thread for receiving messages from other players
