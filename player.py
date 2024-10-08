@@ -30,7 +30,7 @@ def receive_messages():
     while True:
         message, addr = sock_player.recvfrom(1024)
         message = message.decode('utf-8')
-        print(f"Received from {addr}: {message}")
+        #print(f"Received from {addr}: {message}")
 
         # Check if the message contains player information (broadcasted by the dealer)
         if message.startswith("PLAYER_INFO"):
@@ -58,9 +58,9 @@ while True:
         # If the game starts successfully and you're the dealer
         if command.startswith("start"):
             players_info = message.splitlines()[2:]  # Assume player info starts from the second line
-            print("Players in the game:")
+            """print("Players in the game:")
             for player in players_info:
-                print(player)
+                print(player)"""
 
             # Broadcast player information to all other players
             player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
