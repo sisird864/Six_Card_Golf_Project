@@ -57,6 +57,17 @@ def receive_messages():
                     else:
                         if len(card) == 2: row1 += " {card} "
                         else: row1 += "{card} "
+                row2 = ""
+                for card in cards[1]:
+                    if card not in cards_facing_up:
+                        row2 += "*** "
+                    else:
+                        if len(card) == 2:
+                            row2 += " {card} "
+                        else:
+                            row2 += "{card} "
+                print(row1)
+                print(row2)
                 print("Enter your command here: ")
 
 
@@ -109,7 +120,6 @@ while True:
 
     else:
         # If the game has started, allow interaction with other players
-        if command == "show players": print(cards)
         for player in players_info:
             player_info = player.split()
             player_ip = player_info[1]
