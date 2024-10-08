@@ -42,6 +42,7 @@ def receive_messages():
             print("\nNew Game Started!\nPlayers in the game:")
             for player in players_info:
                 print(player)
+            print("Enter your command here: ")
         elif message.startswith("New Card:"):
             new_card = message.splitlines()[1]
             if len(cards[0]) == 3:
@@ -52,8 +53,7 @@ def receive_messages():
                 for c in row:
                     print("*** ")
                 print("\n")
-
-        print("Enter your command here: ")
+            print("Enter your command here: ")
 
 
 # Start a thread for receiving messages from other players
