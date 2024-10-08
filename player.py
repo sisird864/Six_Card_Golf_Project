@@ -48,12 +48,11 @@ def receive_messages():
             if len(cards[0]) == 3:
                 cards[1].append(new_card)
             else: cards[0].append(new_card)
-        if len(cards[1]) == 3:
-            for row in cards:
-                for c in row:
-                    print("*** ")
-                print("\n")
-            print("Enter your command here: ")
+            if len(cards[1]) == 3:
+                for row in cards:
+                        print("*** *** ***")
+                        print("\n")
+                print("Enter your command here: ")
 
 
 # Start a thread for receiving messages from other players
