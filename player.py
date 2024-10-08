@@ -37,6 +37,8 @@ def receive_messages():
         if message.startswith("PLAYER_INFO"):
             global players_info
             global cards
+            global cards_facing_up
+            cards_facing_up = set()
             cards = [[], []]
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
             print("\nNew Game Started!\nPlayers in the game:")
@@ -49,9 +51,12 @@ def receive_messages():
                 cards[1].append(new_card)
             else: cards[0].append(new_card)
             if len(cards[1]) == 3:
-                for row in cards:
-                        print("*** *** ***")
-                        print("\n")
+                row1 = ""
+                for card in cards[0]:
+                    if card not in cards_facing_up: row1 += "*** "
+                    else:
+                        if len(card) == 2: row1 += " {card} "
+                        else: row1 += "{card} "
                 print("Enter your command here: ")
 
 
@@ -76,6 +81,10 @@ while True:
             for player in players_info:
                 print(player)"""
             global deck
+            global cards
+            global cards_facing_up
+            cards_facing_up = set()
+            cards = [[],[]]
             ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
             suits = ['H', 'D', 'C', 'S']
             # Create the deck by combining each rank with each suit
