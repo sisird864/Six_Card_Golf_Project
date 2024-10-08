@@ -109,6 +109,7 @@ while True:
 
     else:
         # If the game has started, allow interaction with other players
+        if command == "show players": print(cards)
         for player in players_info:
             player_info = player.split()
             player_ip = player_info[1]
