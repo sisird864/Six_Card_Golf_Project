@@ -1,6 +1,7 @@
 import socket
 import threading
 import sys
+import random
 
 # Checks if the player started the program with the correct parameters.
 if len(sys.argv) != 5:
@@ -35,10 +36,24 @@ def receive_messages():
         # Check if the message contains player information (broadcasted by the dealer)
         if message.startswith("PLAYER_INFO"):
             global players_info
+            global cards
+            cards = [[], []]
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
             print("\nNew Game Started!\nPlayers in the game:")
             for player in players_info:
                 print(player)
+        elif message.startswith("New Card:"):
+            new_card = message.splitlines()[1]
+            if len(cards[0]) == 3:
+                cards[1].append(new_card)
+            else: cards[0].append(new_card)
+        if len(cards[1]) == 3:
+            for row in cards:
+                for c in row:
+                    print("*** ")
+                print("\n")
+
+        print("Enter your command here: ")
 
 
 # Start a thread for receiving messages from other players
@@ -61,6 +76,13 @@ while True:
             """print("Players in the game:")
             for player in players_info:
                 print(player)"""
+            global deck
+            ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+            suits = ['H', 'D', 'C', 'S']
+            # Create the deck by combining each rank with each suit
+            deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
+            # Shuffles the deck
+            random.shuffle(deck)
 
             # Broadcast player information to all other players
             player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
@@ -69,6 +91,12 @@ while True:
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(player_list_message.encode('utf-8'), (player_ip, player_port))
+            for i in range(6):
+                for player in players_info:
+                    player_info = player.split()
+                    player_ip = player_info[1]
+                    player_port = int(player_info[2])
+                    sock_player.sendto(("New Card:\n",deck.pop()).encode('utf-8'), (player_ip, player_port))
 
     else:
         # If the game has started, allow interaction with other players
