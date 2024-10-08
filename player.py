@@ -96,7 +96,8 @@ while True:
                     player_info = player.split()
                     player_ip = player_info[1]
                     player_port = int(player_info[2])
-                    sock_player.sendto(("New Card:\n",deck.pop()).encode('utf-8'), (player_ip, player_port))
+                    given_card = deck.pop()
+                    sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
 
     else:
         # If the game has started, allow interaction with other players
