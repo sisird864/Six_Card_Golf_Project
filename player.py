@@ -60,17 +60,17 @@ def receive_messages():
                 for card in cards[0]:
                     if card not in cards_facing_up: row1 += "*** "
                     else:
-                        if len(card) == 2: row1 += " {card} "
-                        else: row1 += "{card} "
+                        if len(card) == 2: row1 += f" {card} "
+                        else: row1 += f"{card} "
                 row2 = ""
                 for card in cards[1]:
                     if card not in cards_facing_up:
                         row2 += "*** "
                     else:
                         if len(card) == 2:
-                            row2 += " {card} "
+                            row2 += f" {card} "
                         else:
-                            row2 += "{card} "
+                            row2 += f"{card} "
                 print(row1)
                 print(row2)
                 print("Enter your command here: ")
