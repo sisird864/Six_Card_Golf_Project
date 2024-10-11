@@ -75,6 +75,9 @@ def receive_messages():
                 print(row1)
                 print(row2)
                 print("Enter your command here: ")
+        elif message == "query discard pile":
+            discard_pile_top = discard_pile[len(discard_pile)-1]
+            sock_player.sendto(discard_pile_top, (addr[0], addr[1]))
 
 
 # Start a thread for receiving messages from other players
@@ -100,10 +103,11 @@ while True:
             am_I_dealer = True
             global deck
             global cards
+            global discard_pile
             global cards_facing_up
             cards_facing_up = set()
             cards = [[],[]]
-            ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+            ranks = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
             suits = ['H', 'D', 'C', 'S']
             # Create the deck by combining each rank with each suit
             deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
@@ -124,7 +128,15 @@ while True:
                     player_port = int(player_info[2])
                     given_card = deck.pop()
                     sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
+            discard_pile.append(deck.pop())
 
+    elif message == "query discard pile":
+        player = players_info[0]
+        player_info = player.split()
+        player_ip = player_info[1]
+        player_port = int(player_info[2])
+        sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
+    
     else:
         # If the game has started, allow interaction with other players
         for player in players_info:
