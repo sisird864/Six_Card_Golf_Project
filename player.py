@@ -26,7 +26,6 @@ sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 # Store player information after starting the game
 players_info = []
 
-
 def receive_messages():
     while True:
         message, addr = sock_player.recvfrom(1024)
@@ -51,6 +50,12 @@ def receive_messages():
                 cards[1].append(new_card)
             else: cards[0].append(new_card)
             if len(cards[1]) == 3:
+                while True:
+                    c = cards[random.randint(1,2)][random.randint(1,3)]
+                    if c in cards_facing_up:
+                        continue
+                    cards_facing_up.append(c)
+                    if len(cards_facing_up) == 2: break
                 row1 = ""
                 for card in cards[0]:
                     if card not in cards_facing_up: row1 += "*** "
