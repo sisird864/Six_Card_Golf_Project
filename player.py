@@ -54,7 +54,7 @@ def receive_messages():
                     c = cards[random.randint(0,1)][random.randint(0,2)]
                     if c in cards_facing_up:
                         continue
-                    cards_facing_up.append(c)
+                    cards_facing_up.add(c)
                     if len(cards_facing_up) == 2: break
                 row1 = ""
                 for card in cards[0]:
