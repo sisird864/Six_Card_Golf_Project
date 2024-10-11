@@ -51,7 +51,7 @@ def receive_messages():
             else: cards[0].append(new_card)
             if len(cards[1]) == 3:
                 while True:
-                    c = cards[random.randint(1,2)][random.randint(1,3)]
+                    c = cards[random.randint(0,1)][random.randint(0,2)]
                     if c in cards_facing_up:
                         continue
                     cards_facing_up.append(c)
