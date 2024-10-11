@@ -25,7 +25,7 @@ sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 
 # Store player information after starting the game
 players_info = []
-
+am_I_dealer = False
 def receive_messages():
     while True:
         message, addr = sock_player.recvfrom(1024)
@@ -71,6 +71,7 @@ def receive_messages():
                             row2 += f" {card} "
                         else:
                             row2 += f"{card} "
+                if am_I_dealer: print("\n")
                 print(row1)
                 print(row2)
                 print("Enter your command here: ")
@@ -96,6 +97,7 @@ while True:
             """print("Players in the game:")
             for player in players_info:
                 print(player)"""
+            am_I_dealer = True
             global deck
             global cards
             global cards_facing_up
