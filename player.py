@@ -27,6 +27,8 @@ sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 # Store player information after starting the game
 players_info = []
 am_I_dealer = False
+print_ready = Event()
+
 def receive_messages():
     global print_ready
     while True:
