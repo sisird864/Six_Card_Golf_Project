@@ -80,14 +80,13 @@ def receive_messages():
                             row2 += f"{card} "
                 print(row1)
                 print(row2)
-                #print_ready.set()
         elif message.startswith("Top of Discard Pile"):
             print(message)
             print_ready.set()
         
         elif message.startswith("Your Turn"):
             my_name = message.splitlines()[3]
-            #print(f"\nIt's Your Turn!\n")
+            print(f"\nIt's Your Turn!\n")
             row1 = ""
             for card in cards[0]:
                 if card not in cards_facing_up: row1 += "*** "
@@ -103,15 +102,14 @@ def receive_messages():
                         row2 += f" {card} "
                     else:
                         row2 += f"{card} "
-            #print(row1)
-            #print(row2)
+            print(row1)
+            print(row2)
             for player in players_info:
                 player_info = player.split()
-                #if player_info[0] == my_name: continue
+                if player_info[0] == my_name: continue
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
-            print("Turn Finished")
             turn_ready.set()
             print_ready.set()
         elif message.startswith("\nIt's"):
@@ -187,7 +185,6 @@ while True:
                 player_port = int(player_info[2])
                 sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                 turn_ready.wait()
-                print("test1")
                 turn_ready.clear()
                 for j in range(len(players_info)-1):
                     player_info2 = players_info[j].split()
