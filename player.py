@@ -84,6 +84,10 @@ def receive_messages():
             print(message)
             print_ready.set()
         
+        elif message.startswith("Your Turn"):
+            print("It's Your Turn!")
+            print_ready.set()
+        
         else:
             print(message)
             print_ready.set()
@@ -146,7 +150,18 @@ while True:
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
-
+            
+            num_holes = command[3]
+            for i in range(num_holes):
+                player_info = players_info[-1].split()
+                player_ip = player_info[1]
+                player_port = int(player_info[2])
+                sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n".encode('utf-8'), (player_ip, player_port))
+                for j in range(3):
+                    player_info2 = players_info[j].split()
+                    player_ip2 = player_info2[1]
+                    player_port2 = int(player_info2[2])
+                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n".encode('utf-8'), (player_ip2, player_port2))
 
     
     else:
