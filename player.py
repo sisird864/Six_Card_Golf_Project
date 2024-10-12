@@ -85,7 +85,31 @@ def receive_messages():
             print_ready.set()
         
         elif message.startswith("Your Turn"):
-            print("It's Your Turn!")
+            my_name = message[3]
+            print("It's Your Turn!\n")
+            row1 = ""
+                for card in cards[0]:
+                if card not in cards_facing_up: row1 += "*** "
+                else:
+                    if len(card) == 2: row1 += f" {card} "
+                    else: row1 += f"{card} "
+            row2 = ""
+            for card in cards[1]:
+                if card not in cards_facing_up:
+                    row2 += "*** "
+                else:
+                    if len(card) == 2:
+                        row2 += f" {card} "
+                    else:
+                        row2 += f"{card} "
+            print(row1)
+            print(row2)
+            for player in players_info:
+                player_info = player.split()
+                player_ip = player_info[1]
+                player_port = int(player_info[2])
+                sock_player.sendto(f"{my_name}\'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
+
             print_ready.set()
         
         else:
@@ -156,12 +180,12 @@ while True:
                 player_info = players_info[-1].split()
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
-                sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n".encode('utf-8'), (player_ip, player_port))
+                sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                 for j in range(int(command_list[3])):
                     player_info2 = players_info[j].split()
                     player_ip2 = player_info2[1]
                     player_port2 = int(player_info2[2])
-                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n".encode('utf-8'), (player_ip2, player_port2))
+                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip2, player_port2))
 
     
     else:
