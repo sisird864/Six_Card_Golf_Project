@@ -28,9 +28,9 @@ sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 players_info = []
 am_I_dealer = False
 print_ready = Event()
-
+game_started = False
 def receive_messages():
-    global print_ready
+    if game_started: global print_ready
     while True:
         message, addr = sock_player.recvfrom(1024)
         message = message.decode('utf-8')
@@ -42,12 +42,13 @@ def receive_messages():
             global cards
             global cards_facing_up
             cards_facing_up = set()
+            game_started = True
             cards = [[], []]
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
             print("\nNew Game Started!\nPlayers in the game:")
             for player in players_info:
                 print(player)
-            print_ready.set()
+            if game_started: print_ready.set()
         elif message.startswith("New Card:"):
             new_card = message.splitlines()[1]
             if len(cards[0]) == 3:
@@ -78,13 +79,13 @@ def receive_messages():
                 if am_I_dealer: print("\n")
                 print(row1)
                 print(row2)
-                print_ready.set()
+                if game_started: print_ready.set()
         elif message == "query discard pile":
             discard_pile_top = discard_pile[len(discard_pile)-1]
             sock_player.sendto(discard_pile_top.encode('utf-8'), (addr[0], addr[1]))
         else:
             print(message)
-            print_ready.set()
+            if game_started: print_ready.set()
 
 
 # Start a thread for receiving messages from other players
@@ -92,8 +93,9 @@ threading.Thread(target=receive_messages, daemon=True).start()
 
 # Main loop for sending messages to the tracker or other players.
 while True:
-    print_ready.wait()
-    print_ready.clear()
+    if game_started:
+        print_ready.wait()
+        print_ready.clear()
     command = input("Enter your command here: ")
 
     # Check if it's a command for the tracker
@@ -110,6 +112,7 @@ while True:
             for player in players_info:
                 print(player)"""
             am_I_dealer = True
+            game_started = True
             global deck
             global cards
             global discard_pile
