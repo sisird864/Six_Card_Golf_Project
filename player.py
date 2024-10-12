@@ -106,6 +106,7 @@ def receive_messages():
             print(row2)
             for player in players_info:
                 player_info = player.split()
+                if player_info[0] == my_name: continue
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(f"It's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
