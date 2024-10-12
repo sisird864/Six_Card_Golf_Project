@@ -80,7 +80,10 @@ def receive_messages():
                 print(row1)
                 print(row2)
                 #print_ready.set()
-        #elif message.startswith("Top of Discard Pile"):
+        elif message.startswith("Top of Discard Pile"):
+            print(message)
+            print_ready.set()
+        
         else:
             print(message)
             print_ready.set()
