@@ -150,8 +150,8 @@ while True:
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
-            
-            num_holes = int(command[4])
+            command_list = command.split(" ")
+            num_holes = int(command_list[4])
             for i in range(num_holes):
                 player_info = players_info[-1].split()
                 player_ip = player_info[1]
