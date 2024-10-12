@@ -132,7 +132,7 @@ while True:
                     sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
             discard_pile.append(deck.pop())
 
-    elif message == "query discard pile":
+    elif command == "query discard pile":
         player = players_info[0]
         player_info = player.split()
         player_ip = player_info[1]
