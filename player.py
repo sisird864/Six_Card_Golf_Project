@@ -43,7 +43,7 @@ def receive_messages():
             print("\nNew Game Started!\nPlayers in the game:")
             for player in players_info:
                 print(player)
-            print("Enter your command here: ")
+            #print("Enter your command here: ")
         elif message.startswith("New Card:"):
             new_card = message.splitlines()[1]
             if len(cards[0]) == 3:
@@ -74,7 +74,7 @@ def receive_messages():
                 if am_I_dealer: print("\n")
                 print(row1)
                 print(row2)
-                print("Enter your command here: ")
+                #print("Enter your command here: ")
         elif message == "query discard pile":
             discard_pile_top = discard_pile[len(discard_pile)-1]
             sock_player.sendto(discard_pile_top.encode('utf-8'), (addr[0], addr[1]))
