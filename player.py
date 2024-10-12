@@ -86,7 +86,7 @@ def receive_messages():
         
         elif message.startswith("Your Turn"):
             my_name = message.splitlines()[3]
-            print("It's Your Turn!\n")
+            print("\nIt's Your Turn!\n")
             row1 = ""
             for card in cards[0]:
                 if card not in cards_facing_up: row1 += "*** "
@@ -109,7 +109,7 @@ def receive_messages():
                 if player_info[0] == my_name: continue
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
-                sock_player.sendto(f"It's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
+                sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
 
             print_ready.set()
         
