@@ -86,7 +86,7 @@ def receive_messages():
         
         elif message.startswith("Your Turn"):
             my_name = message.splitlines()[3]
-            print("\nIt's Your Turn!\n")
+            print(f"\nIt's Your Turn {my_name}!\n")
             row1 = ""
             for card in cards[0]:
                 if card not in cards_facing_up: row1 += "*** "
