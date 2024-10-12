@@ -29,6 +29,7 @@ players_info = []
 am_I_dealer = False
 game_started = False
 print_ready = Event()
+turn_ready = Event()
 
 def receive_messages():
     #global print_ready, game_started
@@ -111,7 +112,7 @@ def receive_messages():
                 player_port = int(player_info[2])
                 sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
 
-            print_ready.set()
+            turn_ready.set()
         
         else:
             print(message)
@@ -182,15 +183,15 @@ while True:
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
-                print_ready.wait()
-                print_ready.clear()
+                turn_ready.wait()
+                turn_ready.clear()
                 for j in range(len(players_info)-1):
                     player_info2 = players_info[j].split()
                     player_ip2 = player_info2[1]
                     player_port2 = int(player_info2[2])
                     sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
-                    print_ready.wait()
-                    print_ready.clear()
+                    turn_ready.wait()
+                    turn_ready.clear()
 
     
     else:
