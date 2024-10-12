@@ -111,7 +111,7 @@ def receive_messages():
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
-
+            print("Turn Finished")
             turn_ready.set()
             print_ready.set()
         
@@ -185,6 +185,7 @@ while True:
                 player_port = int(player_info[2])
                 sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                 turn_ready.wait()
+                print("test1")
                 turn_ready.clear()
                 for j in range(len(players_info)-1):
                     player_info2 = players_info[j].split()
