@@ -114,7 +114,7 @@ def receive_messages():
             print("Turn Finished")
             turn_ready.set()
             print_ready.set()
-        elif message.startswith("It's"):
+        elif message.startswith("\nIt's"):
             print(message)
             turn_ready.set()
         else:
