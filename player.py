@@ -31,7 +31,7 @@ game_started = False
 print_ready = Event()
 
 def receive_messages():
-    global print_ready, game_started
+    #global print_ready, game_started
     while True:
         message, addr = sock_player.recvfrom(1024)
         message = message.decode('utf-8')
@@ -77,7 +77,6 @@ def receive_messages():
                             row2 += f" {card} "
                         else:
                             row2 += f"{card} "
-                if am_I_dealer: print("\n")
                 print(row1)
                 print(row2)
                 print_ready.set()
