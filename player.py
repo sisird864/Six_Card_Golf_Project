@@ -144,17 +144,18 @@ while True:
                     sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
             discard_pile.append(deck.pop())
 
-    elif command == "query discard pile":
-        player = players_info[0]
-        player_info = player.split()
-        player_ip = player_info[1]
-        player_port = int(player_info[2])
-        sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
     
     else:
         # If the game has started, allow interaction with other players
-        for player in players_info:
+        if command == "query discard pile":
+            player = players_info[0]
             player_info = player.split()
             player_ip = player_info[1]
             player_port = int(player_info[2])
             sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
+        else:
+            for player in players_info:
+                player_info = player.split()
+                player_ip = player_info[1]
+                player_port = int(player_info[2])
+                sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
