@@ -79,7 +79,8 @@ def receive_messages():
                             row2 += f"{card} "
                 print(row1)
                 print(row2)
-                print_ready.set()
+                #print_ready.set()
+        #elif message.startswith("Top of Discard Pile"):
         else:
             print(message)
             print_ready.set()
@@ -105,9 +106,6 @@ while True:
         # If the game starts successfully and you're the dealer
         if command.startswith("start"):
             players_info = message.splitlines()[2:]  # Assume player info starts from the second line
-            """print("Players in the game:")
-            for player in players_info:
-                print(player)"""
             am_I_dealer = True
             game_started = True
             global deck
@@ -139,6 +137,13 @@ while True:
                     given_card = deck.pop()
                     sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
             discard_pile.append(deck.pop())
+            give_discard_pile = f"\nTop of Discard Pile: {discard_pile[-1]}\n"
+            for player in players_info:
+                player_info = player.split()
+                player_ip = player_info[1]
+                player_port = int(player_info[2])
+                sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
+
 
     
     else:
