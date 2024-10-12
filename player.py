@@ -27,10 +27,11 @@ sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 # Store player information after starting the game
 players_info = []
 am_I_dealer = False
-print_ready = Event()
 game_started = False
+print_ready = Event()
+
 def receive_messages():
-    if game_started: global print_ready
+    global print_ready, game_started
     while True:
         message, addr = sock_player.recvfrom(1024)
         message = message.decode('utf-8')
@@ -42,13 +43,13 @@ def receive_messages():
             global cards
             global cards_facing_up
             cards_facing_up = set()
-            game_started = True
             cards = [[], []]
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
             print("\nNew Game Started!\nPlayers in the game:")
             for player in players_info:
                 print(player)
-            if game_started: print_ready.set()
+            game_started = True
+            print_ready.set()
         elif message.startswith("New Card:"):
             new_card = message.splitlines()[1]
             if len(cards[0]) == 3:
@@ -79,13 +80,13 @@ def receive_messages():
                 if am_I_dealer: print("\n")
                 print(row1)
                 print(row2)
-                if game_started: print_ready.set()
+                print_ready.set()
         elif message == "query discard pile":
             discard_pile_top = discard_pile[len(discard_pile)-1]
             sock_player.sendto(discard_pile_top.encode('utf-8'), (addr[0], addr[1]))
         else:
             print(message)
-            if game_started: print_ready.set()
+            print_ready.set()
 
 
 # Start a thread for receiving messages from other players
