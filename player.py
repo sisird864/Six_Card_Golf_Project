@@ -85,7 +85,7 @@ def receive_messages():
             print_ready.set()
         
         elif message.startswith("Your Turn"):
-            #my_name = message.splitlines()[3]
+            my_name = message.splitlines()[3]
             #print(f"\nIt's Your Turn!\n")
             row1 = ""
             for card in cards[0]:
