@@ -108,7 +108,7 @@ def receive_messages():
                 player_info = player.split()
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
-                sock_player.sendto(f"{my_name}\'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
+                sock_player.sendto(f"It's {my_name}'s turn:\n{row1}\n{row2}\n".encode('utf-8'), (player_ip, player_port))
 
             print_ready.set()
         
