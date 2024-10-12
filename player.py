@@ -80,10 +80,6 @@ def receive_messages():
                 print(row1)
                 print(row2)
                 print_ready.set()
-        elif message == "query discard pile":
-            discard_pile_top = discard_pile[len(discard_pile)-1]
-            sock_player.sendto(discard_pile_top.encode('utf-8'), (addr[0], addr[1]))
-            print_ready.set()
         else:
             print(message)
             print_ready.set()
@@ -147,12 +143,6 @@ while True:
     
     else:
         # If the game has started, allow interaction with other players
-        if command == "query discard pile":
-            player = players_info[0]
-            player_info = player.split()
-            player_ip = player_info[1]
-            player_port = int(player_info[2])
-            sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
         else:
             for player in players_info:
                 player_info = player.split()
