@@ -143,9 +143,8 @@ while True:
     
     else:
         # If the game has started, allow interaction with other players
-        else:
-            for player in players_info:
-                player_info = player.split()
-                player_ip = player_info[1]
-                player_port = int(player_info[2])
-                sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
+        for player in players_info:
+            player_info = player.split()
+            player_ip = player_info[1]
+            player_port = int(player_info[2])
+            sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
