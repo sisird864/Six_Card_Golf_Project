@@ -88,7 +88,7 @@ def receive_messages():
             my_name = message[3]
             print("It's Your Turn!\n")
             row1 = ""
-                for card in cards[0]:
+            for card in cards[0]:
                 if card not in cards_facing_up: row1 += "*** "
                 else:
                     if len(card) == 2: row1 += f" {card} "
