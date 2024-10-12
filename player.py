@@ -77,7 +77,7 @@ def receive_messages():
                 print("Enter your command here: ")
         elif message == "query discard pile":
             discard_pile_top = discard_pile[len(discard_pile)-1]
-            sock_player.sendto(discard_pile_top, (addr[0], addr[1]))
+            sock_player.sendto(discard_pile_top.encode('utf-8'), (addr[0], addr[1]))
 
 
 # Start a thread for receiving messages from other players
