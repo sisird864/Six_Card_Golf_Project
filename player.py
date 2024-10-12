@@ -104,6 +104,7 @@ while True:
             global deck
             global cards
             global discard_pile
+            discard_pile = []
             global cards_facing_up
             cards_facing_up = set()
             cards = [[],[]]
