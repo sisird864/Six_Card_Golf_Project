@@ -184,14 +184,14 @@ while True:
                 player_port = int(player_info[2])
                 sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                 turn_ready.wait()
-                turn_ready.clear()
+                #turn_ready.clear()
                 for j in range(len(players_info)-1):
                     player_info2 = players_info[j].split()
                     player_ip2 = player_info2[1]
                     player_port2 = int(player_info2[2])
                     sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
                     turn_ready.wait()
-                    turn_ready.clear()
+                    #turn_ready.clear()
 
     
     else:
