@@ -3,6 +3,7 @@ import threading
 import sys
 import random
 from threading import Event
+import ast
 
 # Checks if the player started the program with the correct parameters.
 if len(sys.argv) != 5:
@@ -87,6 +88,7 @@ def receive_messages():
         elif message.startswith("Your Turn"):
             my_name = message.splitlines()[3]
             discard_pile = message.splitlines()[1]
+            discard_pile = ast.literal_eval(discard_pile)
             if len(discard_pile) == 0: discard_pile_top = "Discard Pile is Empty"
             else: discard_pile_top = f"Top of Discard Pile: {discard_pile[-1]}"
             print(f"\nIt's Your Turn!\n")
