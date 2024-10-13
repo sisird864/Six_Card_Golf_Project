@@ -4,6 +4,7 @@ import sys
 import random
 from threading import Event
 import ast
+import time
 
 # Checks if the player started the program with the correct parameters.
 if len(sys.argv) != 5:
@@ -31,6 +32,7 @@ am_I_dealer = False
 game_started = False
 print_ready = Event()
 turn_ready = Event()
+my_turn = Event()
 
 def receive_messages():
     #global print_ready, game_started
@@ -86,6 +88,7 @@ def receive_messages():
             print_ready.set()
         
         elif message.startswith("Your Turn"):
+            my_turn.set()
             my_name = message.splitlines()[3]
             discard_pile = message.splitlines()[1]
             discard_pile = ast.literal_eval(discard_pile)
@@ -155,6 +158,7 @@ def receive_messages():
             print(row2)
             
             turn_ready.set()
+            my_turn.clear()
             print_ready.set()
         elif message.startswith("\nIt's"):
             print(message)
@@ -172,6 +176,8 @@ while True:
     if game_started:
         print_ready.wait()
         print_ready.clear()
+    if my_turn.is_set():
+        time.sleep(20)
     command = input("Enter your command here: ")
 
     # Check if it's a command for the tracker
