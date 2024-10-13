@@ -164,13 +164,19 @@ def receive_messages():
                         row2 += f"{card} "
             print(row1)
             print(row2)
-           
+
+            player_info_d = players_info[0].split()
+            player_ip_d = player_info_d[1]
+            player_port_d = int(player_info_d[2])
+            sock_player.sendto("Turn Finished".encode('utf-8'), (player_ip_d, player_port_d))
+
             turn_ready.set()
             my_turn.clear()
             print_ready.set()
         elif message.startswith("\nIt's"):
             print(message)
-            turn_ready.set()
+            #turn_ready.set()
+        elif message == "Turn Finished": turn_ready.set()
         else:
             print(message)
             print_ready.set()
@@ -189,7 +195,7 @@ while True:
         print_ready.clear()
     if my_turn.is_set():
         time.sleep(20)
-        turn_ready.set()
+        #turn_ready.set()
     command = input("Enter your command here: ")
 
 
