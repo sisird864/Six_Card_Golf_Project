@@ -89,6 +89,8 @@ def receive_messages():
             my_name = message.splitlines()[3]
             discard_pile = message.splitlines()[1]
             discard_pile = ast.literal_eval(discard_pile)
+            deck = message.splitlines()[2]
+            deck = ast.literal_eval(deck)
             if len(discard_pile) == 0: discard_pile_top = "Discard Pile is Empty"
             else: discard_pile_top = f"Top of Discard Pile: {discard_pile[-1]}"
             print(f"\nIt's Your Turn!\n")
@@ -116,6 +118,42 @@ def receive_messages():
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))
+            
+            from_deck = False
+            c = input("Pick from discard pile or deck: ")
+            if c == "discard pile": my_card = discard_pile.pop()
+            else: 
+                my_card = deck.pop()
+                from_deck = True
+            print(f"New Card: {my_card}\n")
+            if from_deck: position = input("Enter position of card to replace, or discard: ")
+            else: position = input("Enter position of card to replace: ")
+            if position == "discard":
+                discard_pile.append(my_card)
+            else:
+                row_of_card = int(position[0])
+                column_of_card = int(position[1])
+                cards[row_of_card][column_of_card] = my_card
+                cards_facing_up.add(cards[row_of_card][column_of_card])
+            
+            row1 = ""
+            for card in cards[0]:
+                if card not in cards_facing_up: row1 += "*** "
+                else:
+                    if len(card) == 2: row1 += f" {card} "
+                    else: row1 += f"{card} "
+            row2 = ""
+            for card in cards[1]:
+                if card not in cards_facing_up:
+                    row2 += "*** "
+                else:
+                    if len(card) == 2:
+                        row2 += f" {card} "
+                    else:
+                        row2 += f"{card} "
+            print(row1)
+            print(row2)
+            
             turn_ready.set()
             print_ready.set()
         elif message.startswith("\nIt's"):
