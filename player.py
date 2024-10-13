@@ -139,13 +139,13 @@ while True:
         print(row1)
         print(row2)
         print(discard_pile_top)
-            """for player in players_info:
-                player_info = player.split()
-                if player_info[0] == my_name: continue
-                player_ip = player_info[1]
-                player_port = int(player_info[2])
-                sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))"""
-            
+        """for player in players_info:
+            player_info = player.split()
+            if player_info[0] == my_name: continue
+            player_ip = player_info[1]
+            player_port = int(player_info[2])
+            sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))"""
+        
         from_deck = False
         c = input("Pick from discard pile or deck: ")
         if c == "discard pile": my_card = discard_pile.pop()
