@@ -158,7 +158,7 @@ def receive_messages():
             print_ready.set()
         elif message.startswith("\nIt's"):
             print(message)
-            turn_ready.set()
+            #turn_ready.set()
         else:
             print(message)
             print_ready.set()
