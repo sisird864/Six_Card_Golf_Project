@@ -31,7 +31,6 @@ am_I_dealer = False
 game_started = False
 print_ready = Event()
 turn_ready = Event()
-turn_finished = Event()
 
 def receive_messages():
     #global print_ready, game_started
@@ -113,12 +112,12 @@ def receive_messages():
             print(row1)
             print(row2)
             print(discard_pile_top)
-            for player in players_info:
+            """for player in players_info:
                 player_info = player.split()
                 if player_info[0] == my_name: continue
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
-                sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))
+                sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))"""
             
             from_deck = False
             c = input("Pick from discard pile or deck: ")
@@ -156,7 +155,6 @@ def receive_messages():
             print(row2)
             
             turn_ready.set()
-            turn_finished.set()
             print_ready.set()
         elif message.startswith("\nIt's"):
             print(message)
@@ -232,8 +230,6 @@ while True:
                 sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                 turn_ready.wait()
                 turn_ready.clear()
-                turn_finished.wait()
-                turn_finished.clear()
                 for j in range(len(players_info)-1):
                     player_info2 = players_info[j].split()
                     player_ip2 = player_info2[1]
@@ -241,8 +237,6 @@ while True:
                     sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
                     turn_ready.wait()
                     turn_ready.clear()
-                    turn_finished.wait()
-                    turn_finished.clear()
 
     
     else:
