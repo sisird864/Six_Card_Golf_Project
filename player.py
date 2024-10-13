@@ -178,6 +178,7 @@ while True:
         print_ready.clear()
     if my_turn.is_set():
         time.sleep(20)
+        turn_ready.set()
     command = input("Enter your command here: ")
 
     # Check if it's a command for the tracker
