@@ -176,80 +176,81 @@ while True:
         print(row1)
         print(row2)
 
-    if game_started:
-        print_ready.wait()
-        print_ready.clear()
-    command = input("Enter your command here: ")
+    else:
+        if game_started:
+            print_ready.wait()
+            print_ready.clear()
+        command = input("Enter your command here: ")
 
-    # Check if it's a command for the tracker
-    if command.startswith("register") or command == "query players" or command == "query games" or command.startswith("de-register") or command.startswith("start") or command.startswith("end"):
-        sock_tracker.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
-        message, addr = sock_tracker.recvfrom(1024)
-        message = message.decode('utf-8')
-        print(message)
+        # Check if it's a command for the tracker
+        if command.startswith("register") or command == "query players" or command == "query games" or command.startswith("de-register") or command.startswith("start") or command.startswith("end"):
+            sock_tracker.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
+            message, addr = sock_tracker.recvfrom(1024)
+            message = message.decode('utf-8')
+            print(message)
 
-        # If the game starts successfully and you're the dealer
-        if command.startswith("start"):
-            players_info = message.splitlines()[2:]  # Assume player info starts from the second line
-            am_I_dealer = True
-            game_started = True
-            global deck
-            global cards
-            global discard_pile
-            discard_pile = []
-            global cards_facing_up
-            cards_facing_up = set()
-            cards = [[],[]]
-            ranks = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-            suits = ['H', 'D', 'C', 'S']
-            # Create the deck by combining each rank with each suit
-            deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
-            # Shuffles the deck
-            random.shuffle(deck)
+            # If the game starts successfully and you're the dealer
+            if command.startswith("start"):
+                players_info = message.splitlines()[2:]  # Assume player info starts from the second line
+                am_I_dealer = True
+                game_started = True
+                global deck
+                global cards
+                global discard_pile
+                discard_pile = []
+                global cards_facing_up
+                cards_facing_up = set()
+                cards = [[],[]]
+                ranks = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+                suits = ['H', 'D', 'C', 'S']
+                # Create the deck by combining each rank with each suit
+                deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
+                # Shuffles the deck
+                random.shuffle(deck)
 
-            # Broadcast player information to all other players
-            player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
-            for player in players_info[1:]:  # Skip the first entry (dealer)
-                player_info = player.split()
-                player_ip = player_info[1]
-                player_port = int(player_info[2])
-                sock_player.sendto(player_list_message.encode('utf-8'), (player_ip, player_port))
-            for i in range(6):
+                # Broadcast player information to all other players
+                player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
+                for player in players_info[1:]:  # Skip the first entry (dealer)
+                    player_info = player.split()
+                    player_ip = player_info[1]
+                    player_port = int(player_info[2])
+                    sock_player.sendto(player_list_message.encode('utf-8'), (player_ip, player_port))
+                for i in range(6):
+                    for player in players_info:
+                        player_info = player.split()
+                        player_ip = player_info[1]
+                        player_port = int(player_info[2])
+                        given_card = deck.pop()
+                        sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
+                discard_pile.append(deck.pop())
+                give_discard_pile = f"\nTop of Discard Pile: {discard_pile[-1]}\n"
                 for player in players_info:
                     player_info = player.split()
                     player_ip = player_info[1]
                     player_port = int(player_info[2])
-                    given_card = deck.pop()
-                    sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
-            discard_pile.append(deck.pop())
-            give_discard_pile = f"\nTop of Discard Pile: {discard_pile[-1]}\n"
+                    sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
+                command_list = command.split(" ")
+                num_holes = int(command_list[4])
+                for i in range(num_holes):
+                    player_info = players_info[-1].split()
+                    player_ip = player_info[1]
+                    player_port = int(player_info[2])
+                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
+                    turn_ready.wait()
+                    turn_ready.clear()
+                    for j in range(len(players_info)-1):
+                        player_info2 = players_info[j].split()
+                        player_ip2 = player_info2[1]
+                        player_port2 = int(player_info2[2])
+                        sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
+                        turn_ready.wait()
+                        turn_ready.clear()
+
+        
+        else:
+            # If the game has started, allow interaction with other players
             for player in players_info:
                 player_info = player.split()
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
-                sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
-            command_list = command.split(" ")
-            num_holes = int(command_list[4])
-            for i in range(num_holes):
-                player_info = players_info[-1].split()
-                player_ip = player_info[1]
-                player_port = int(player_info[2])
-                sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
-                turn_ready.wait()
-                turn_ready.clear()
-                for j in range(len(players_info)-1):
-                    player_info2 = players_info[j].split()
-                    player_ip2 = player_info2[1]
-                    player_port2 = int(player_info2[2])
-                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
-                    turn_ready.wait()
-                    turn_ready.clear()
-
-    
-    else:
-        # If the game has started, allow interaction with other players
-        for player in players_info:
-            player_info = player.split()
-            player_ip = player_info[1]
-            player_port = int(player_info[2])
-            sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
+                sock_player.sendto(command.encode('utf-8'), (player_ip, player_port))
