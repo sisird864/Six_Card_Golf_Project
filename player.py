@@ -31,6 +31,7 @@ am_I_dealer = False
 game_started = False
 print_ready = Event()
 turn_ready = Event()
+turn_finished = Event()
 
 def receive_messages():
     #global print_ready, game_started
@@ -155,6 +156,7 @@ def receive_messages():
             print(row2)
             
             turn_ready.set()
+            turn_finished.set()
             print_ready.set()
         elif message.startswith("\nIt's"):
             print(message)
@@ -230,6 +232,8 @@ while True:
                 sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                 turn_ready.wait()
                 turn_ready.clear()
+                turn_finished.wait()
+                turn_finished.clear()
                 for j in range(len(players_info)-1):
                     player_info2 = players_info[j].split()
                     player_ip2 = player_info2[1]
@@ -237,6 +241,8 @@ while True:
                     sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
                     turn_ready.wait()
                     turn_ready.clear()
+                    turn_finished.wait()
+                    turn_finished.clear()
 
     
     else:
