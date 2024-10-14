@@ -102,6 +102,8 @@ def receive_messages():
             discard_pile = ast.literal_eval(discard_pile)
             deck = message.splitlines()[2]
             deck = ast.literal_eval(deck)
+            print(deck)
+            print(discard_pile)
             if len(discard_pile) == 0: discard_pile_top = "Discard Pile is Empty"
             else: discard_pile_top = f"Top of Discard Pile: {discard_pile[-1]}"
             print(f"\nIt's Your Turn!\n")
@@ -177,7 +179,7 @@ def receive_messages():
             print(message)
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
-            discard_pile = ast.literal_eval(message.splitlines()[2])
+            discard_pile = ast.literal_eval(message.splitlines()[2]) # FIX WHEN DISCARD PILE IS EMPTY
             print(discard_pile)
             turn_ready.set()
         else:
