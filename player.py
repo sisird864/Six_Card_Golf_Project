@@ -18,8 +18,6 @@ tracker_ip = sys.argv[1]
 tracker_port = int(sys.argv[2])
 t_port = int(sys.argv[3])
 p_port = int(sys.argv[4])
-deck = []
-discard_pile = []
 
 
 hostname = socket.gethostname()
@@ -100,14 +98,14 @@ def receive_messages():
         elif message.startswith("Your Turn"):
             my_turn.set()
             my_name = message.splitlines()[3]
-            discard_pile = message.splitlines()[1]
-            discard_pile = ast.literal_eval(discard_pile)
-            deck = message.splitlines()[2]
-            deck = ast.literal_eval(deck)
-            print(deck)
-            print(discard_pile)
-            if len(discard_pile) == 0: discard_pile_top = "Discard Pile is Empty"
-            else: discard_pile_top = f"Top of Discard Pile: {discard_pile[-1]}"
+            curr_discard_pile = message.splitlines()[1]
+            curr_discard_pile = ast.literal_eval(curr_discard_pile)
+            curr_deck = message.splitlines()[2]
+            curr_deck = ast.literal_eval(curr_deck)
+            print(curr_deck)
+            print(curr_discard_pile)
+            if len(curr_discard_pile) == 0: discard_pile_top = "Discard Pile is Empty"
+            else: discard_pile_top = f"Top of Discard Pile: {curr_discard_pile[-1]}"
             print(f"\nIt's Your Turn!\n")
             row1 = ""
             for card in cards[0]:
@@ -136,15 +134,15 @@ def receive_messages():
            
             from_deck = False
             c = input("Pick from discard pile or deck: ")
-            if c == "discard pile": my_card = discard_pile.pop()
+            if c == "discard pile": my_card = curr_discard_pile.pop()
             else:
-                my_card = deck.pop()
+                my_card = curr_deck.pop()
                 from_deck = True
             print(f"New Card: {my_card}\n")
             if from_deck: position = input("Enter position of card to replace, or discard: ")
             else: position = input("Enter position of card to replace: ")
             if position == "discard":
-                discard_pile.append(my_card)
+                curr_discard_pile.append(my_card)
             else:
                 row_of_card = int(position[0])
                 column_of_card = int(position[1])
@@ -172,7 +170,7 @@ def receive_messages():
             player_info_d = players_info[0].split()
             player_ip_d = player_info_d[1]
             player_port_d = int(player_info_d[2])
-            sock_player.sendto(f"Turn Finished\n{deck}\n{discard_pile}".encode('utf-8'), (player_ip_d, player_port_d))
+            sock_player.sendto(f"Turn Finished\n{curr_deck}\n{curr_discard_pile}".encode('utf-8'), (player_ip_d, player_port_d))
 
             #turn_ready.set()
             my_turn.clear()
@@ -182,6 +180,7 @@ def receive_messages():
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
             discard_pile = ast.literal_eval(message.splitlines()[2])
+            print(deck)
             print(discard_pile)
             turn_ready.set()
         else:
@@ -219,7 +218,10 @@ while True:
             players_info = message.splitlines()[2:]  # Assume player info starts from the second line
             am_I_dealer = True
             game_started = True
+            global deck
             global cards
+            global discard_pile
+            discard_pile = []
             global cards_facing_up
             cards_facing_up = set()
             cards = [[],[]]
