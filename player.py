@@ -176,8 +176,8 @@ def receive_messages():
         elif message.startswith("\nIt's"):
             print(message)
         elif message.startswith("Turn Finished"):
-            deck = message.splitlines()[1]
-            discard_pile = message.splitlines()[2]
+            deck = ast.literal_eval(message.splitlines()[1])
+            discard_pile = ast.literal_eval(message.splitlines()[2])
             turn_ready.set()
         else:
             print(message)
