@@ -170,7 +170,7 @@ def receive_messages():
             player_port_d = int(player_info_d[2])
             sock_player.sendto(f"Turn Finished\n{deck}\n{discard_pile}".encode('utf-8'), (player_ip_d, player_port_d))
 
-            turn_ready.set()
+            #turn_ready.set()
             my_turn.clear()
             print_ready.set()
         elif message.startswith("\nIt's"):
@@ -178,6 +178,7 @@ def receive_messages():
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
             discard_pile = ast.literal_eval(message.splitlines()[2])
+            print(discard_pile)
             turn_ready.set()
         else:
             print(message)
