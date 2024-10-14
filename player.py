@@ -18,6 +18,8 @@ tracker_ip = sys.argv[1]
 tracker_port = int(sys.argv[2])
 t_port = int(sys.argv[3])
 p_port = int(sys.argv[4])
+deck = []
+discard_pile = []
 
 
 hostname = socket.gethostname()
@@ -179,7 +181,7 @@ def receive_messages():
             print(message)
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
-            discard_pile = ast.literal_eval(message.splitlines()[2]) # FIX WHEN DISCARD PILE IS EMPTY
+            discard_pile = ast.literal_eval(message.splitlines()[2])
             print(discard_pile)
             turn_ready.set()
         else:
@@ -217,10 +219,7 @@ while True:
             players_info = message.splitlines()[2:]  # Assume player info starts from the second line
             am_I_dealer = True
             game_started = True
-            global deck
             global cards
-            global discard_pile
-            discard_pile = []
             global cards_facing_up
             cards_facing_up = set()
             cards = [[],[]]
