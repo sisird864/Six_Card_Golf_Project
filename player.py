@@ -246,7 +246,7 @@ while True:
             deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
             # Shuffles the deck
             random.shuffle(deck)
-
+            print(deck)
 
             # Broadcast player information to all other players
             player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
