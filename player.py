@@ -274,6 +274,7 @@ while True:
             cards_up_dict = dict()
             for i in range(num_holes):
                 while all_cards_are_up == False:
+                    print(cards_up_dict)
                     player_info = players_info[-1].split()
                     player_ip = player_info[1]
                     player_port = int(player_info[2])
@@ -293,7 +294,7 @@ while True:
                         sock_player.sendto("Cards Up".encode('utf-8'), (player_ip2, player_port2))
                         turn_ready.wait()
                         turn_ready.clear()
-                    print(cards_up_dict)
+                        
                     if all(val == "6" for val in cards_up_dict.values()):
                         all_cards_are_up = True
                     else:
