@@ -198,6 +198,9 @@ def receive_messages():
         elif message.startswith("Num_Up"):
             cards_up_dict[message.splitlines()[1]] = message.splitlines()[2]
             turn_ready.set()
+        elif message == "Reset":
+            cards = [[], []]
+            cards_facing_up = []
         else:
             print(message)
             print_ready.set()
@@ -242,11 +245,6 @@ while True:
             cards = [[],[]]
             ranks = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
             suits = ['H', 'D', 'C', 'S']
-            # Create the deck by combining each rank with each suit
-            deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
-            # Shuffles the deck
-            random.shuffle(deck)
-            print(deck)
 
             # Broadcast player information to all other players
             player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
@@ -255,25 +253,32 @@ while True:
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
                 sock_player.sendto(player_list_message.encode('utf-8'), (player_ip, player_port))
-            for i in range(6):
+            
+            command_list = command.split(" ")
+            num_holes = int(command_list[4])
+
+            for i in range(num_holes):
+                # Create the deck by combining each rank with each suit
+                deck = [f'{rank}{suit}' for rank in ranks for suit in suits]
+                # Shuffles the deck
+                random.shuffle(deck)
+                #print(deck)
+                for i in range(6):
+                    for player in players_info:
+                        player_info = player.split()
+                        player_ip = player_info[1]
+                        player_port = int(player_info[2])
+                        given_card = deck.pop()
+                        sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
+                discard_pile.append(deck.pop())
+                give_discard_pile = f"\nTop of Discard Pile: {discard_pile[-1]}\n"
                 for player in players_info:
                     player_info = player.split()
                     player_ip = player_info[1]
                     player_port = int(player_info[2])
-                    given_card = deck.pop()
-                    sock_player.sendto(f"New Card:\n{given_card}".encode('utf-8'), (player_ip, player_port))
-            discard_pile.append(deck.pop())
-            give_discard_pile = f"\nTop of Discard Pile: {discard_pile[-1]}\n"
-            for player in players_info:
-                player_info = player.split()
-                player_ip = player_info[1]
-                player_port = int(player_info[2])
-                sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
-            command_list = command.split(" ")
-            num_holes = int(command_list[4])
-            all_cards_are_up = False
-            cards_up_dict = dict()
-            for i in range(num_holes):
+                    sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
+                all_cards_are_up = False
+                cards_up_dict = dict()
                 first_done = False
                 while all_cards_are_up == False:
                     print(cards_up_dict)
@@ -282,7 +287,7 @@ while True:
                     player_port = int(player_info[2])
                     if first_done: sock_player.sendto(f"Your Turn\n{send_discard_pile}\n{send_deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
                     else: sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
-                    cards_up_event.wait() #FIX THIS IT RESENDS THE OG DECK WHICH MAKES THE DECK RESTART
+                    cards_up_event.wait()
                     cards_up_event.clear()
                     sock_player.sendto("Cards Up".encode('utf-8'), (player_ip, player_port))
                     turn_ready.wait()
@@ -303,6 +308,12 @@ while True:
                     else:
                         all_cards_are_up = False
                     first_done = True
+                for player in players_info:
+                        player_info = player.split()
+                        player_ip = player_info[1]
+                        player_port = int(player_info[2])
+                        given_card = deck.pop()
+                        sock_player.sendto("Reset".encode('utf-8'), (player_ip, player_port))
 
 
 
