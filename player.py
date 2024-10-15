@@ -293,6 +293,7 @@ while True:
                         sock_player.sendto("Cards Up".encode('utf-8'), (player_ip2, player_port2))
                         turn_ready.wait()
                         turn_ready.clear()
+                    print(cards_up_dict)
                     if all(val == "6" for val in cards_up_dict.values()):
                         all_cards_are_up = True
                     else:
