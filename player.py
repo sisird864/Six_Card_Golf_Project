@@ -39,6 +39,7 @@ game_started = False
 print_ready = Event()
 turn_ready = Event()
 my_turn = Event()
+cards_up_event = Event()
 
 
 def receive_messages():
@@ -186,6 +187,15 @@ def receive_messages():
             send_deck = list(deck)
             global send_discard_pile
             send_discard_pile = list(discard_pile)
+            #turn_ready.set()
+            cards_up_event.set()
+        elif message == "Cards Up":
+            player_info_d = players_info[0].split()
+            player_ip_d = player_info_d[1]
+            player_port_d = int(player_info_d[2])
+            sock_player.sendto((f"Num_Up\n{my_name}\n"+str(len(cards_facing_up))).encode('utf-8'), (player_ip_d, player_port_d))
+        elif message.startswith("Num_Up"):
+            cards_up_dict[message.splitlines()[1]] = message.splitlines()[2]
             turn_ready.set()
         else:
             print(message)
@@ -260,20 +270,35 @@ while True:
                 sock_player.sendto(give_discard_pile.encode('utf-8'), (player_ip, player_port))
             command_list = command.split(" ")
             num_holes = int(command_list[4])
+            all_cards_are_up = False
+            cards_up_dict = dict()
             for i in range(num_holes):
-                player_info = players_info[-1].split()
-                player_ip = player_info[1]
-                player_port = int(player_info[2])
-                sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
-                turn_ready.wait()
-                turn_ready.clear()
-                for j in range(len(players_info)-1):
-                    player_info2 = players_info[j].split()
-                    player_ip2 = player_info2[1]
-                    player_port2 = int(player_info2[2])
-                    sock_player.sendto(f"Your Turn\n{send_discard_pile}\n{send_deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
+                while all_cards_are_up == False:
+                    player_info = players_info[-1].split()
+                    player_ip = player_info[1]
+                    player_port = int(player_info[2])
+                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
+                    cards_up_event.wait()
+                    cards_up_event.clear()
+                    sock_player.sendto("Cards Up".encode('utf-8'), (player_ip, player_port))
                     turn_ready.wait()
                     turn_ready.clear()
+                    for j in range(len(players_info)-1):
+                        player_info2 = players_info[j].split()
+                        player_ip2 = player_info2[1]
+                        player_port2 = int(player_info2[2])
+                        sock_player.sendto(f"Your Turn\n{send_discard_pile}\n{send_deck}\n{player_info2[0]}\n".encode('utf-8'), (player_ip2, player_port2))
+                        cards_up_event.wait()
+                        cards_up_event.clear()
+                        sock_player.sendto("Cards Up".encode('utf-8'), (player_ip2, player_port2))
+                        turn_ready.wait()
+                        turn_ready.clear()
+                    if all(val == "6" for val in cards_up_dict.values()):
+                        all_cards_are_up = True
+                    else:
+                        all_cards_are_up = False
+
+
 
 
    
