@@ -55,6 +55,8 @@ def receive_messages():
             global players_info
             global cards
             global cards_facing_up
+            global points
+            points = 0
             cards_facing_up = []
             cards = [[], []]
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
@@ -199,6 +201,24 @@ def receive_messages():
             cards_up_dict[message.splitlines()[1]] = message.splitlines()[2]
             turn_ready.set()
         elif message == "Reset":
+            cols_for_0 = set()
+            for r in range(len(cards)):
+                for c in range(len(cards[r])):
+                    if len(cards[r][c]) == 2: val = cards[r][c][0]
+                    else: val = cards[r][c][0:2]
+
+                    if r==0:
+                        if len(val) == 1 and cards[r+1][c][0] == val: cols_for_0.add(c)
+                        elif len(val) == 2 and cards[r+1][c][0:2] == val: cols_for_0.add(c)
+                    else:
+                        if c in cols_for_0: continue
+                        else:
+                            if val == 'A': points += 1
+                            elif val == '2': points -= 2
+                            elif val == 'K': continue
+                            elif val == 'J' or val == 'Q': points += 10
+                            else: points += int(val)
+            print(points)
             cards = [[], []]
             cards_facing_up = []
         else:
@@ -242,8 +262,10 @@ while True:
             discard_pile = []
             global cards_facing_up
             cards_facing_up = []
+            global points
+            points = 0
             cards = [[],[]]
-            ranks = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+            ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K','A']
             suits = ['H', 'D', 'C', 'S']
 
             # Broadcast player information to all other players
@@ -303,10 +325,10 @@ while True:
                         turn_ready.wait()
                         turn_ready.clear()
 
-                    if all(val == "6" for val in cards_up_dict.values()):
-                        all_cards_are_up = True
-                    else:
-                        all_cards_are_up = False
+                    for pl in cards_up_dict:
+                        if cards_up_dict[pl] == '6':
+                            all_cards_are_up = True
+                            break
                     first_done = True
                 for player in players_info:
                         player_info = player.split()
