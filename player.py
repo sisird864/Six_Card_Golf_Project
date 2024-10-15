@@ -103,8 +103,8 @@ def receive_messages():
             discard_pile = ast.literal_eval(discard_pile)
             deck = message.splitlines()[2]
             deck = ast.literal_eval(deck)
-            print(deck)
-            print(discard_pile)
+            #print(deck)
+            #print(discard_pile)
             if len(discard_pile) == 0: discard_pile_top = "Discard Pile is Empty"
             else: discard_pile_top = f"Top of Discard Pile: {discard_pile[-1]}"
             print(f"\nIt's Your Turn!\n")
@@ -167,7 +167,7 @@ def receive_messages():
                         row2 += f"{card} "
             print(row1)
             print(row2)
-
+            print("CARDS UP: ",len(cards_facing_up))
             player_info_d = players_info[0].split()
             player_ip_d = player_info_d[1]
             player_port_d = int(player_info_d[2])
@@ -294,7 +294,7 @@ while True:
                         sock_player.sendto("Cards Up".encode('utf-8'), (player_ip2, player_port2))
                         turn_ready.wait()
                         turn_ready.clear()
-                        
+
                     if all(val == "6" for val in cards_up_dict.values()):
                         all_cards_are_up = True
                     else:
