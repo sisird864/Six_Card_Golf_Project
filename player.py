@@ -55,7 +55,7 @@ def receive_messages():
             global players_info
             global cards
             global cards_facing_up
-            cards_facing_up = set()
+            cards_facing_up = []
             cards = [[], []]
             players_info = message.splitlines()[1:]  # Store player information from the broadcast
             print("\nNew Game Started!\nPlayers in the game:")
@@ -73,7 +73,7 @@ def receive_messages():
                     c = cards[random.randint(0,1)][random.randint(0,2)]
                     if c in cards_facing_up:
                         continue
-                    cards_facing_up.add(c)
+                    cards_facing_up.append(c)
                     if len(cards_facing_up) == 2: break
                 row1 = ""
                 for card in cards[0]:
@@ -149,7 +149,7 @@ def receive_messages():
                 row_of_card = int(position[0])
                 column_of_card = int(position[1])
                 cards[row_of_card][column_of_card] = my_card
-                cards_facing_up.add(my_card)
+                cards_facing_up.append(my_card)
            
             row1 = ""
             for card in cards[0]:
@@ -238,7 +238,7 @@ while True:
             global discard_pile
             discard_pile = []
             global cards_facing_up
-            cards_facing_up = set()
+            cards_facing_up = []
             cards = [[],[]]
             ranks = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
             suits = ['H', 'D', 'C', 'S']
