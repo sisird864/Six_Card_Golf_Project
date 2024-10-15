@@ -126,6 +126,7 @@ def receive_messages():
             print(row1)
             print(row2)
             print(discard_pile_top)
+            print("CARDS UP BEFORE: ",cards_facing_up)
             for player in players_info:
                 player_info = player.split()
                 if player_info[0] == my_name: continue
@@ -148,7 +149,7 @@ def receive_messages():
                 row_of_card = int(position[0])
                 column_of_card = int(position[1])
                 cards[row_of_card][column_of_card] = my_card
-                cards_facing_up.add(cards[row_of_card][column_of_card])
+                cards_facing_up.add(my_card)
            
             row1 = ""
             for card in cards[0]:
@@ -167,7 +168,7 @@ def receive_messages():
                         row2 += f"{card} "
             print(row1)
             print(row2)
-            print("CARDS UP: ",len(cards_facing_up))
+            print("CARDS UP: ",cards_facing_up)
             player_info_d = players_info[0].split()
             player_ip_d = player_info_d[1]
             player_port_d = int(player_info_d[2])
