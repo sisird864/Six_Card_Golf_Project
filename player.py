@@ -274,13 +274,15 @@ while True:
             all_cards_are_up = False
             cards_up_dict = dict()
             for i in range(num_holes):
+                first_done = False
                 while all_cards_are_up == False:
                     print(cards_up_dict)
                     player_info = players_info[-1].split()
                     player_ip = player_info[1]
                     player_port = int(player_info[2])
-                    sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
-                    cards_up_event.wait()
+                    if first_done: sock_player.sendto(f"Your Turn\n{send_discard_pile}\n{send_deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
+                    else: sock_player.sendto(f"Your Turn\n{discard_pile}\n{deck}\n{player_info[0]}\n".encode('utf-8'), (player_ip, player_port))
+                    cards_up_event.wait() #FIX THIS IT RESENDS THE OG DECK WHICH MAKES THE DECK RESTART
                     cards_up_event.clear()
                     sock_player.sendto("Cards Up".encode('utf-8'), (player_ip, player_port))
                     turn_ready.wait()
@@ -300,6 +302,7 @@ while True:
                         all_cards_are_up = True
                     else:
                         all_cards_are_up = False
+                    first_done = True
 
 
 
