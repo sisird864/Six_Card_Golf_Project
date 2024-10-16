@@ -40,6 +40,8 @@ print_ready = Event()
 turn_ready = Event()
 my_turn = Event()
 cards_up_event = Event()
+got_points = Event()
+
 
 
 def receive_messages():
@@ -224,10 +226,15 @@ def receive_messages():
                             elif val == 'K': continue
                             elif val == 'J' or val == 'Q' or val == '10': points += 10
                             else: points += int(val)
-            print(points)
+            print("Points for Round:", points)
+            sock_player.sendto(f"Points\n{my_name}\n{points}\n".encode('utf-8'), (player_ip_d, player_port_d))
             points = 0
             cards = [[], []]
             cards_facing_up = []
+        elif message.startswith("Points"):
+            if message.splitlines()[1] in points_dict: points_dict[message.splitlines()[1]] += message.splitlines()[2]
+            else: points_dict[message.splitlines()[1]] = message.splitlines()[2]
+            got_points.set()
         else:
             print(message)
             print_ready.set()
@@ -285,6 +292,7 @@ while True:
             
             command_list = command.split(" ")
             num_holes = int(command_list[4])
+            points_dict = dict()
 
             for i in range(num_holes):
                 # Create the deck by combining each rank with each suit
@@ -344,6 +352,10 @@ while True:
                         player_port = int(player_info[2])
                         given_card = deck.pop()
                         sock_player.sendto("Reset".encode('utf-8'), (player_ip, player_port))
+                got_points.wait()
+                got_points.clear()
+                print(points_dict)
+                
 
 
 
