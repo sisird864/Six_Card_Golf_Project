@@ -130,7 +130,7 @@ def receive_messages():
             print(row1)
             print(row2)
             print(discard_pile_top)
-            print("CARDS UP BEFORE: ",cards_facing_up)
+            #print("CARDS UP BEFORE: ",cards_facing_up)
             for player in players_info:
                 player_info = player.split()
                 if player_info[0] == my_name: continue
@@ -172,7 +172,7 @@ def receive_messages():
                         row2 += f"{card} "
             print(row1)
             print(row2)
-            print("CARDS UP: ",cards_facing_up)
+            #print("CARDS UP: ",cards_facing_up)
             player_info_d = players_info[0].split()
             player_ip_d = player_info_d[1]
             player_port_d = int(player_info_d[2])
@@ -186,8 +186,8 @@ def receive_messages():
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
             discard_pile = ast.literal_eval(message.splitlines()[2])
-            print(deck)
-            print(discard_pile)
+            #print(deck)
+            #print(discard_pile)
             global send_deck
             send_deck = list(deck)
             global send_discard_pile
@@ -209,8 +209,8 @@ def receive_messages():
                 for c in range(len(cards[r])):
                     if len(cards[r][c]) == 2: val = cards[r][c][0]
                     else: val = cards[r][c][0:2]
-                    print("Points: ",points)
-                    print(val)
+                    #print("Points: ",points)
+                    #print(val)
 
                     if r==0 and len(val) == 1 and cards[r+1][c][0] == val:
                         print("ZERO ROW")
@@ -235,6 +235,9 @@ def receive_messages():
             if message.splitlines()[1] in points_dict: points_dict[message.splitlines()[1]] += message.splitlines()[2]
             else: points_dict[message.splitlines()[1]] = message.splitlines()[2]
             reset_next_player.set()
+        elif message.startswith("Total Points:"):
+            print(message)
+            print_ready.set()
         else:
             print(message)
             print_ready.set()
@@ -354,7 +357,13 @@ while True:
                         sock_player.sendto("Reset".encode('utf-8'), (player_ip, player_port))
                         reset_next_player.wait()
                         reset_next_player.clear()
-                print(points_dict)
+                for player in players_info:
+                    dict_string = "Total Points:\n".join([f"{key}'s points: {value}" for key, value in points_dict.items()])
+                    player_info = player.split()
+                    player_ip = player_info[1]
+                    player_port = int(player_info[2])
+                    given_card = deck.pop()
+                    sock_player.sendto(dict_string.encode('utf-8'), (player_ip, player_port))
                 
 
 
