@@ -208,8 +208,10 @@ def receive_messages():
                     if len(cards[r][c]) == 2: val = cards[r][c][0]
                     else: val = cards[r][c][0:2]
                     print(val)
+                    print("Points: ",points)
 
                     if r==0:
+                        print("ZERO ROW")
                         if len(val) == 1 and cards[r+1][c][0] == val: cols_for_0.add(c)
                         elif len(val) == 2 and cards[r+1][c][0:2] == val: cols_for_0.add(c)
                     else:
@@ -220,7 +222,6 @@ def receive_messages():
                             elif val == 'K': continue
                             elif val == 'J' or val == 'Q' or val == '10': points += 10
                             else: points += int(val)
-                print("Points: ",points)
             print(points)
             points = 0
             cards = [[], []]
