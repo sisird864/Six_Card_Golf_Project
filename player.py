@@ -201,6 +201,7 @@ def receive_messages():
             cards_up_dict[message.splitlines()[1]] = message.splitlines()[2]
             turn_ready.set()
         elif message == "Reset":
+            points = 0
             cols_for_0 = set()
             for r in range(len(cards)):
                 for c in range(len(cards[r])):
@@ -219,7 +220,9 @@ def receive_messages():
                             elif val == 'K': continue
                             elif val == 'J' or val == 'Q' or val == '10': points += 10
                             else: points += int(val)
+                print("Points: ",points)
             print(points)
+            points = 0
             cards = [[], []]
             cards_facing_up = []
         else:
