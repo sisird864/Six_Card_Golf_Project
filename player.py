@@ -40,7 +40,7 @@ print_ready = Event()
 turn_ready = Event()
 my_turn = Event()
 cards_up_event = Event()
-got_points = Event()
+reset_next_player = Event()
 
 
 
@@ -234,7 +234,7 @@ def receive_messages():
         elif message.startswith("Points"):
             if message.splitlines()[1] in points_dict: points_dict[message.splitlines()[1]] += message.splitlines()[2]
             else: points_dict[message.splitlines()[1]] = message.splitlines()[2]
-            got_points.set()
+            reset_next_player.set()
         else:
             print(message)
             print_ready.set()
@@ -352,8 +352,8 @@ while True:
                         player_port = int(player_info[2])
                         given_card = deck.pop()
                         sock_player.sendto("Reset".encode('utf-8'), (player_ip, player_port))
-                got_points.wait()
-                got_points.clear()
+                        reset_next_player.wait()
+                        reset_next_player.clear()
                 print(points_dict)
                 
 
