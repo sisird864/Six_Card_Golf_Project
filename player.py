@@ -207,16 +207,15 @@ def receive_messages():
                 for c in range(len(cards[r])):
                     if len(cards[r][c]) == 2: val = cards[r][c][0]
                     else: val = cards[r][c][0:2]
-                    print(val)
                     print("Points: ",points)
+                    print(val)
 
-                    if r==0:
-                        if len(val) == 1 and cards[r+1][c][0] == val:
-                            print("ZERO ROW")
-                            cols_for_0.add(c)
-                        elif len(val) == 2 and cards[r+1][c][0:2] == val:
-                            print("ZERO ROW")
-                            cols_for_0.add(c)
+                    if r==0 and len(val) == 1 and cards[r+1][c][0] == val:
+                        print("ZERO ROW")
+                        cols_for_0.add(c)
+                    elif r==0 and len(val) == 2 and cards[r+1][c][0:2] == val:
+                        print("ZERO ROW")
+                        cols_for_0.add(c)
                     else:
                         if c in cols_for_0: continue
                         else:
