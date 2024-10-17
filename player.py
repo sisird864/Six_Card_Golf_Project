@@ -158,8 +158,8 @@ def receive_messages():
                         global card_from_steal
                         card_from_steal = ""
                         sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
-                        got_card.wait()
-                        got_card.clear()
+                        #got_card.wait()
+                        #got_card.clear()
                         my_card = card_from_steal
                         from_steal = True
                         break
@@ -184,8 +184,6 @@ def receive_messages():
                     player_port_s = int(player_info_s[2])
                     if player_info_s[0] == steal_player:
                         sock_player.sendto(f"My Card\n{replaced_card}\n{steal_position}".encode('utf-8'), (player_ip_s, player_port_s))
-                        got_card.wait()
-                        got_card.clear()
                         break
 
             row1 = ""
@@ -219,7 +217,7 @@ def receive_messages():
             print(message)
         elif message.startswith("Stolen Card"):
             card_from_steal = message.splitlines()[1]
-            got_card.set()
+            #got_card.set()
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
