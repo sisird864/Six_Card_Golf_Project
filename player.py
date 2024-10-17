@@ -216,11 +216,14 @@ def receive_messages():
         elif message.startswith("\nIt's"):
             print(message)
         elif message.startswith("Stolen Card"):
-            card_from_steal = message.splitlines()[1]
+            card_from_steal_temp = message.splitlines()[1]
+            card_from_steal = card_from_steal_temp
+            print(card_from_steal)
             #got_card.set()
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
+            print(card_to_give)
             for pl in players_info:
                 player_info_s = players_info[0].split()
                 player_ip_s = player_info_s[1]
@@ -228,6 +231,7 @@ def receive_messages():
                 if player_info_s[0] == message.splitlines()[2]:
                     sock_player.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
                     break
+                
         
         elif message.startswith("My Card"):
             card1 = message.splitlines()[1]
