@@ -41,8 +41,8 @@ turn_ready = Event()
 my_turn = Event()
 cards_up_event = Event()
 reset_next_player = Event()
-
-
+turn_in_progress = False
+got_card = Event()
 
 def receive_messages():
     #global print_ready, game_started
@@ -101,6 +101,7 @@ def receive_messages():
             print_ready.set()
        
         elif message.startswith("Your Turn"):
+            turn_in_progress = True
             my_turn.set()
             my_name = message.splitlines()[3]
             discard_pile = message.splitlines()[1]
@@ -139,11 +140,27 @@ def receive_messages():
                 sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))
            
             from_deck = False
-            c = input("Pick from discard pile or deck: ")
+            c = input("Pick from discard pile or deck, or steal: ")
             if c == "discard pile": my_card = discard_pile.pop()
-            else:
+            elif c == "deck":
                 my_card = deck.pop()
                 from_deck = True
+            else:
+                steal_player = input("Enter which player to steal from: ")
+                steal_position = input("Enter position of card to steal: ")
+                for pl in players_info:
+                    player_info_s = players_info[0].split()
+                    player_ip_s = player_info_s[1]
+                    player_port_s = int(player_info_s[2])
+                    if player_info_s[0] ==steal_player:
+                        global card_from_steal
+                        card_from_steal = ""
+                        sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
+                        got_card.wait()
+                        got_card.clear()
+                        break
+
+
             print(f"New Card: {my_card}\n")
             if from_deck: position = input("Enter position of card to replace, or discard: ")
             else: position = input("Enter position of card to replace: ")
@@ -181,8 +198,22 @@ def receive_messages():
             #turn_ready.set()
             my_turn.clear()
             print_ready.set()
+            turn_in_progress = False
         elif message.startswith("\nIt's"):
             print(message)
+        elif message.startswith("Steal"):
+            indexes = message.splitlines()[1]
+            card_to_give = cards[int(indexes[0])][int(indexes[1])]
+            for pl in players_info:
+                player_info_s = players_info[0].split()
+                player_ip_s = player_info_s[1]
+                player_port_s = int(player_info_s[2])
+                if player_info_s[0] == message.splitlines()[2]:
+                    sock_player.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
+                    break
+            got_card.set()
+
+
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
             discard_pile = ast.literal_eval(message.splitlines()[2])
@@ -235,7 +266,7 @@ def receive_messages():
             if message.splitlines()[1] in points_dict: points_dict[message.splitlines()[1]] += message.splitlines()[2]
             else: points_dict[message.splitlines()[1]] = message.splitlines()[2]
             reset_next_player.set()
-        elif message.startswith("\nTotal Points:"):
+        elif message.startswith("\nTotal Points:\n"):
             print(message)
             print_ready.set()
         else:
@@ -255,8 +286,9 @@ while True:
         print_ready.wait()
         print_ready.clear()
     if my_turn.is_set():
-        time.sleep(20)
-        #turn_ready.set()
+        while turn_in_progress:
+            time.sleep(1)
+            #turn_ready.set()
     command = input("Enter your command here: ")
 
 
