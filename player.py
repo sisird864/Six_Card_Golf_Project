@@ -101,7 +101,7 @@ def receive_messages():
             print_ready.set()
        
         elif message.startswith("Your Turn"):
-            turn_in_progress = True
+            #turn_in_progress = True
             my_turn.set()
             my_name = message.splitlines()[3]
             discard_pile = message.splitlines()[1]
@@ -214,7 +214,7 @@ def receive_messages():
             #turn_ready.set()
             my_turn.clear()
             print_ready.set()
-            turn_in_progress = False
+            #turn_in_progress = False
         elif message.startswith("\nIt's"):
             print(message)
         elif message.startswith("Stolen Card"):
@@ -307,10 +307,9 @@ while True:
     if game_started:
         print_ready.wait()
         print_ready.clear()
-    if my_turn.is_set():
-        while turn_in_progress:
-            time.sleep(1)
-            #turn_ready.set()
+    while my_turn.is_set():
+        time.sleep(1)
+        #turn_ready.set()
     command = input("Enter your command here: ")
 
 
