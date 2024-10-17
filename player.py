@@ -140,6 +140,8 @@ def receive_messages():
                 sock_player.sendto(f"\nIt's {my_name}'s turn:\n{row1}\n{row2}\n{discard_pile_top}\n".encode('utf-8'), (player_ip, player_port))
            
             from_deck = False
+            from_steal = False
+
             c = input("Pick from discard pile or deck, or steal: ")
             if c == "discard pile": my_card = discard_pile.pop()
             elif c == "deck":
@@ -158,6 +160,8 @@ def receive_messages():
                         sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
                         got_card.wait()
                         got_card.clear()
+                        my_card = card_from_steal
+                        from_steal = True
                         break
 
 
@@ -169,9 +173,21 @@ def receive_messages():
             else:
                 row_of_card = int(position[0])
                 column_of_card = int(position[1])
+                replaced_card = cards[row_of_card][column_of_card]
                 cards[row_of_card][column_of_card] = my_card
                 cards_facing_up.append(my_card)
-           
+
+            if from_steal:
+                for pl in players_info:
+                    player_info_s = players_info[0].split()
+                    player_ip_s = player_info_s[1]
+                    player_port_s = int(player_info_s[2])
+                    if player_info_s[0] == steal_player:
+                        sock_player.sendto(f"My Card\n{replaced_card}\n{steal_position}".encode('utf-8'), (player_ip_s, player_port_s))
+                        got_card.wait()
+                        got_card.clear()
+                        break
+
             row1 = ""
             for card in cards[0]:
                 if card not in cards_facing_up: row1 += "*** "
@@ -201,6 +217,8 @@ def receive_messages():
             turn_in_progress = False
         elif message.startswith("\nIt's"):
             print(message)
+        elif message.startswith("Stolen Card"):
+            card_from_steal = message.splitlines()[1]
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
@@ -212,7 +230,11 @@ def receive_messages():
                     sock_player.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
                     break
             got_card.set()
-
+        
+        elif message.startswith("My Card"):
+            card1 = message.splitlines()[1]
+            indexes = message.splitlines()[2]
+            cards[int(indexes[0])][int(indexes[1])] = card1
 
         elif message.startswith("Turn Finished"):
             deck = ast.literal_eval(message.splitlines()[1])
