@@ -217,7 +217,9 @@ def receive_messages():
         elif message.startswith("\nIt's"):
             print(message)
         elif message.startswith("Stolen Card"):
+            print("test1")
             card_from_steal = message.splitlines()[1]
+            print("test2")
             print("Card stolen: ",card_from_steal)
             got_card.set()
         elif message.startswith("Steal"):
