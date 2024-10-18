@@ -224,6 +224,8 @@ def receive_messages():
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
             print("Card to give: ",card_to_give)
+            print("TEST",player_info_s[0],"TEST")
+            print("TEST",message.splitlines()[2],"TEST")
             for pl in players_info:
                 player_info_s = players_info[0].split()
                 player_ip_s = player_info_s[1]
