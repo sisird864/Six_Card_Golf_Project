@@ -224,12 +224,12 @@ def receive_messages():
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
             print("Card to give: ",card_to_give)
-            print("message rec from: ",message.splitlines()[2])
             for pl in players_info:
                 player_info_s = players_info[0].split()
                 player_ip_s = player_info_s[1]
                 player_port_s = int(player_info_s[2])
                 if player_info_s[0] == message.splitlines()[2]:
+                    print("message rec from: ",message.splitlines()[2])
                     sock_player.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
                     break
                 
