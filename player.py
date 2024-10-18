@@ -69,7 +69,6 @@ def receive_steal():
                 player_info = player.split()
                 player_name = player_info[0]
                 player_ip = player_info[1]
-                player_port = int(player_info[2])
                 
                 if player_name == requesting_player:
                     #print("found!!!")
@@ -252,6 +251,7 @@ def receive_messages():
         
         elif message.startswith("My Card"):
             card1 = message.splitlines()[1]
+            cards_facing_up.append(card1)
             indexes = message.splitlines()[2]
             cards[int(indexes[0])][int(indexes[1])] = card1
 
