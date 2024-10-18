@@ -31,6 +31,9 @@ sock_tracker.bind((ip_address, t_port))  # Assigns port for the socket
 sock_player = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP socket for peer-to-peer communication
 sock_player.bind((ip_address, p_port))  # Assigns port for the socket
 
+sock_steal = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP socket for peer-to-peer communication
+sock_steal.bind((ip_address, 40350))  # Assigns port for the socket
+
 
 # Store player information after starting the game
 players_info = []
@@ -43,6 +46,27 @@ cards_up_event = Event()
 reset_next_player = Event()
 turn_in_progress = False
 got_card = Event()
+
+def receive_steal():
+    while True:
+        message, addr = sock_steal.recvfrom(1024)
+        message = message.decode('utf-8')
+        if message.startswith("Stolen Card"):
+            card_from_steal = message.splitlines()[1]
+            print("Card stolen: ",card_from_steal)
+            #got_card.set()
+        elif message.startswith("Steal"):
+            indexes = message.splitlines()[1]
+            card_to_give = cards[int(indexes[0])][int(indexes[1])]
+            print("Card to give: ",card_to_give)
+            
+            for pl in players_info:
+                player_info_s = pl.split()
+                player_ip_s = player_info_s[1]
+                player_port_s = int(player_info_s[2])
+                if player_info_s[0] == message.splitlines()[2]:
+                    sock_steal.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
+                    break
 
 def receive_messages():
     #global print_ready, game_started
@@ -157,7 +181,7 @@ def receive_messages():
                     if player_info_s[0] ==steal_player:
                         global card_from_steal
                         card_from_steal = ""
-                        sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
+                        sock_steal.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
                         #got_card.wait()
                         #got_card.clear()
                         my_card = card_from_steal
@@ -303,7 +327,7 @@ def receive_messages():
 
 # Start a thread for receiving messages from other players
 threading.Thread(target=receive_messages, daemon=True).start()
-
+threading.Thread(target=receive_steal, daemon=True).start()
 
 # Main loop for sending messages to the tracker or other players.
 while True:
