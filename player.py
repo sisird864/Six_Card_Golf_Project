@@ -65,7 +65,9 @@ def receive_steal():
                 player_ip_s = player_info_s[1]
                 player_port_s = int(player_info_s[2])
                 if player_info_s[0] == message.splitlines()[2]:
+                    print("sent")
                     sock_steal.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
+                    print("sent2")
                     break
 
 def receive_messages():
