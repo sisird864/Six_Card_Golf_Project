@@ -331,7 +331,7 @@ def receive_messages():
 
 # Start a thread for receiving messages from other players
 threading.Thread(target=receive_messages, daemon=True).start()
-
+threading.Thread(target=receive_steal, daemon=True).start()
 # Main loop for sending messages to the tracker or other players.
 while True:
     if game_started:
@@ -379,8 +379,6 @@ while True:
             command_list = command.split(" ")
             num_holes = int(command_list[4])
             points_dict = dict()
-
-            threading.Thread(target=receive_steal, daemon=True).start()
 
             for i in range(num_holes):
                 # Create the deck by combining each rank with each suit
