@@ -248,22 +248,6 @@ def receive_messages():
             #turn_in_progress = False
         elif message.startswith("\nIt's"):
             print(message)
-        elif message.startswith("Stolen Card"):
-            card_from_steal = message.splitlines()[1]
-            print("Card stolen: ",card_from_steal)
-            #got_card.set()
-        elif message.startswith("Steal"):
-            indexes = message.splitlines()[1]
-            card_to_give = cards[int(indexes[0])][int(indexes[1])]
-            print("Card to give: ",card_to_give)
-            
-            for pl in players_info:
-                player_info_s = pl.split()
-                player_ip_s = player_info_s[1]
-                player_port_s = int(player_info_s[2])
-                if player_info_s[0] == message.splitlines()[2]:
-                    sock_player.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
-                    break
                 
         
         elif message.startswith("My Card"):
@@ -371,7 +355,7 @@ while True:
             cards = [[],[]]
             ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K','A']
             suits = ['H', 'D', 'C', 'S']
-
+            threading.Thread(target=receive_steal, daemon=True).start()
             # Broadcast player information to all other players
             player_list_message = "PLAYER_INFO\n" + "\n".join(players_info)
             for player in players_info[1:]:  # Skip the first entry (dealer)
