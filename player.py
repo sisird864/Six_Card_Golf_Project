@@ -57,10 +57,9 @@ def receive_steal():
             got_card.set()
         
         elif message.startswith("Steal"):
-            print("TESTSETSETSETES")
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
-            
+            print("card to give: ", card_to_give)
             # Get the requesting player's name from the message
             requesting_player = message.splitlines()[2]
             
@@ -70,8 +69,11 @@ def receive_steal():
                 player_name = player_info[0]
                 player_ip = player_info[1]
                 player_port = int(player_info[2])
+                print("P: ",player_name)
+                print("R: ",requesting_player)
                 
                 if player_name == requesting_player:
+                    print("found!!!")
                     sock_steal.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip, player_port))
                     break
 
