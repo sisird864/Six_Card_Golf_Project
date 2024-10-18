@@ -285,10 +285,10 @@ def receive_messages():
                     #print(val)
 
                     if r==0 and len(val) == 1 and cards[r+1][c][0] == val:
-                        print("ZERO ROW")
+                        #print("ZERO ROW")
                         cols_for_0.add(c)
                     elif r==0 and len(val) == 2 and cards[r+1][c][0:2] == val:
-                        print("ZERO ROW")
+                        #print("ZERO ROW")
                         cols_for_0.add(c)
                     else:
                         if c in cols_for_0: continue
@@ -304,8 +304,8 @@ def receive_messages():
             cards = [[], []]
             cards_facing_up = []
         elif message.startswith("Points"):
-            if message.splitlines()[1] in points_dict: points_dict[message.splitlines()[1]] += message.splitlines()[2]
-            else: points_dict[message.splitlines()[1]] = message.splitlines()[2]
+            if message.splitlines()[1] in points_dict: points_dict[message.splitlines()[1]] += int(message.splitlines()[2])
+            else: points_dict[message.splitlines()[1]] = int(message.splitlines()[2])
             reset_next_player.set()
         elif message.startswith("\nTotal Points:\n"):
             print(message)
