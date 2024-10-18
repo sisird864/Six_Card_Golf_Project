@@ -161,6 +161,7 @@ def receive_messages():
                         message1, addr1 = sock_player.recvfrom(1024)
                         message1 = message1.decode('utf-8')
                         if message1.startswith("Stolen Card"):
+                            print("GOT CARD")
                             card_from_steal = message1.splitlines()[1]
 
                         #got_card.wait()
