@@ -151,13 +151,12 @@ def receive_messages():
                 steal_player = input("Enter which player to steal from: ")
                 steal_position = input("Enter position of card to steal: ")
                 for pl in players_info:
-                    player_info_s = players_info[0].split()
+                    player_info_s = pl.split()
                     player_ip_s = player_info_s[1]
                     player_port_s = int(player_info_s[2])
                     if player_info_s[0] ==steal_player:
                         global card_from_steal
                         card_from_steal = ""
-                        got_card.clear()
                         sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
                         got_card.wait()
                         got_card.clear()
