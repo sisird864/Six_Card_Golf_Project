@@ -161,6 +161,7 @@ def receive_messages():
                         #got_card.wait()
                         #got_card.clear()
                         my_card = card_from_steal
+                        print(my_card)
                         from_steal = True
                         break
 
@@ -229,10 +230,7 @@ def receive_messages():
                 player_info_s = pl.split()
                 player_ip_s = player_info_s[1]
                 player_port_s = int(player_info_s[2])
-                print("TEST",player_info_s[0],"TEST")
-                print("TEST",message.splitlines()[2],"TEST")
                 if player_info_s[0] == message.splitlines()[2]:
-                    print("message rec from: ",message.splitlines()[2])
                     sock_player.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
                     break
                 
