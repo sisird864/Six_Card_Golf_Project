@@ -161,7 +161,7 @@ def receive_messages():
                         #got_card.wait()
                         #got_card.clear()
                         my_card = card_from_steal
-                        print(my_card)
+                        print("My Card: ",my_card)
                         from_steal = True
                         break
 
