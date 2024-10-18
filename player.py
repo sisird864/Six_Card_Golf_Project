@@ -393,7 +393,7 @@ while True:
                 cards_up_dict = dict()
                 first_done = False
                 while all_cards_are_up == False:
-                    print(cards_up_dict)
+                    #print(cards_up_dict)
                     player_info = players_info[-1].split()
                     player_ip = player_info[1]
                     player_port = int(player_info[2])
