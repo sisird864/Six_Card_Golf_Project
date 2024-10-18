@@ -190,7 +190,7 @@ def receive_messages():
                     player_port_s = int(player_info_s[2])
                     if player_info_s[0] ==steal_player:
                         global card_from_steal
-                        card_from_steal = ""
+                        card_from_steal = "None"
                         sock_steal.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, 40350))
                         got_card.wait()
                         got_card.clear()
