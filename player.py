@@ -60,7 +60,7 @@ def receive_steal():
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
             print("Card to give: ",card_to_give)
-            
+            print("play info: ", players_info)
             for pl in players_info:
                 player_info_s = pl.split()
                 player_ip_s = player_info_s[1]
