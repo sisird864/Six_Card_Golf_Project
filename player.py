@@ -51,10 +51,10 @@ def receive_steal():
     while True:
         message, addr = sock_steal.recvfrom(1024)
         message = message.decode('utf-8')
-        print("message gotten")
         if message.startswith("Stolen Card"):
-            card_from_steal = message.splitlines()[1]
-            print("Card stolen: ", card_from_steal)
+            global card_from_steal_temp
+            card_from_steal_temp = message.splitlines()[1]
+            print("Card stolen: ", card_from_steal_temp)
             got_card.set()
         
         elif message.startswith("Steal"):
@@ -189,12 +189,10 @@ def receive_messages():
                     player_ip_s = player_info_s[1]
                     player_port_s = int(player_info_s[2])
                     if player_info_s[0] ==steal_player:
-                        global card_from_steal
-                        card_from_steal = "None"
                         sock_steal.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, 40350))
                         got_card.wait()
                         got_card.clear()
-                        my_card = card_from_steal
+                        my_card = card_from_steal_temp
                         print("My Card: ",my_card)
                         from_steal = True
                         break
