@@ -94,6 +94,7 @@ def receive_messages():
             for player in players_info:
                 print(player)
             game_started = True
+            threading.Thread(target=receive_steal, daemon=True).start()
             print_ready.set()
         elif message.startswith("New Card:"):
             new_card = message.splitlines()[1]
@@ -331,7 +332,7 @@ def receive_messages():
 
 # Start a thread for receiving messages from other players
 threading.Thread(target=receive_messages, daemon=True).start()
-threading.Thread(target=receive_steal, daemon=True).start()
+
 # Main loop for sending messages to the tracker or other players.
 while True:
     if game_started:
