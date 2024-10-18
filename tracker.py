@@ -35,12 +35,13 @@ def register_func(command, addr):
 # Otherwise, returns FAILURE to the player if the player is not registered
 def deregister_func(command, addr):
     list1 = command.split(" ")
-    for i in range(len(players)):
-        if players[i][0] == list1[1]:
-            players.pop(i)
+    for i in range(len(free_players)):
+        if free_players[i] == list1[1]:
+            players.remove(list1[1])
+            free_players.remove(list1[1])
             sock1.sendto("SUCCESS".encode('utf-8'), (addr[0], addr[1]))
             return
-    free_players.remove(list1[1])
+    
     sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
     return
 

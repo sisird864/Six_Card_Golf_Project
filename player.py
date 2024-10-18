@@ -54,13 +54,13 @@ def receive_steal():
         if message.startswith("Stolen Card"):
             global card_from_steal_temp
             card_from_steal_temp = message.splitlines()[1]
-            print("Card stolen: ", card_from_steal_temp)
+            #print("Card stolen: ", card_from_steal_temp)
             got_card.set()
         
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
-            print("card to give: ", card_to_give)
+            #print("card to give: ", card_to_give)
             # Get the requesting player's name from the message
             requesting_player = message.splitlines()[2]
             
@@ -192,7 +192,7 @@ def receive_messages():
                         got_card.wait()
                         got_card.clear()
                         my_card = card_from_steal_temp
-                        print("My Card: ",my_card)
+                        #print("My Card: ",my_card)
                         from_steal = True
                         break
 
@@ -333,11 +333,17 @@ while True:
 
     # Check if it's a command for the tracker
     if command.startswith("register") or command == "query players" or command == "query games" or command.startswith("de-register") or command.startswith("start") or command.startswith("end"):
+        """
+        if command.startswith("end"):
+            if game_started:
+                print("Game still in progress!")
+                continue
+        """
         sock_tracker.sendto(command.encode('utf-8'), (tracker_ip, tracker_port))
         message, addr = sock_tracker.recvfrom(1024)
         message = message.decode('utf-8')
         print(message)
-
+        
 
         # If the game starts successfully and you're the dealer
         if command.startswith("start"):
@@ -435,11 +441,7 @@ while True:
                     player_port = int(player_info[2])
                     given_card = deck.pop()
                     sock_player.sendto(("\nTotal Points:"+dict_string).encode('utf-8'), (player_ip, player_port))
-                
-
-
-
-
+            game_started = False
    
     else:
         # If the game has started, allow interaction with other players
