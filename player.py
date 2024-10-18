@@ -160,7 +160,7 @@ def receive_messages():
                         sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
                         message1, addr1 = sock_player.recvfrom(1024)
                         message1 = message1.decode('utf-8')
-                        print(message1)
+                        print("New message",message1)
                         if message1.startswith("Stolen Card"):
                             print("GOT CARD")
                             card_from_steal = message1.splitlines()[1]
@@ -223,12 +223,6 @@ def receive_messages():
             #turn_in_progress = False
         elif message.startswith("\nIt's"):
             print(message)
-        elif message.startswith("Stolen Card"):
-            print("test1")
-            card_from_steal = message.splitlines()[1]
-            print("test2")
-            print("Card stolen: ",card_from_steal)
-            #got_card.set()
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
