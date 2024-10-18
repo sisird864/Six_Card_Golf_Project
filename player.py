@@ -57,6 +57,7 @@ def receive_steal():
             got_card.set()
         
         elif message.startswith("Steal"):
+            print("TESTSETSETSETES")
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
             
