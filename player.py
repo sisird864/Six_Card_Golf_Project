@@ -186,8 +186,8 @@ def receive_messages():
                         global card_from_steal
                         card_from_steal = ""
                         sock_steal.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
-                        got_card.wait()
-                        got_card.clear()
+                        #got_card.wait()
+                        #got_card.clear()
                         my_card = card_from_steal
                         print("My Card: ",my_card)
                         from_steal = True
