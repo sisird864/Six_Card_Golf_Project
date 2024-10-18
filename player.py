@@ -53,24 +53,27 @@ def receive_steal():
         message = message.decode('utf-8')
         if message.startswith("Stolen Card"):
             card_from_steal = message.splitlines()[1]
-            print("Card stolen: ",card_from_steal)
+            print("Card stolen: ", card_from_steal)
             got_card.set()
         
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
-            print("Card to give: ",card_to_give)
-            print("play info: ", players_info)
-            for pl in players_info:
-                player_info_s = pl.split()
-                player_ip_s = player_info_s[1]
-                player_port_s = int(player_info_s[2])
-                print(player_info_s[0]," ::: ",message.splitlines()[2])
-                if player_info_s[0] == message.splitlines()[2]:
-                    print("sent")
-                    sock_steal.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip_s, player_port_s))
-                    print("sent2")
+            
+            # Get the requesting player's name from the message
+            requesting_player = message.splitlines()[2]
+            
+            # Find the requesting player in players_info and send them the card
+            for player in players_info:
+                player_info = player.split()
+                player_name = player_info[0]
+                player_ip = player_info[1]
+                player_port = int(player_info[2])
+                
+                if player_name == requesting_player:
+                    sock_steal.sendto(f"Stolen Card\n{card_to_give}".encode('utf-8'), (player_ip, player_port))
                     break
+
 
 def receive_messages():
     #global print_ready, game_started
