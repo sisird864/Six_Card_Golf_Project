@@ -218,12 +218,12 @@ def receive_messages():
         elif message.startswith("Stolen Card"):
             card_from_steal_temp = message.splitlines()[1]
             card_from_steal = card_from_steal_temp
-            print(card_from_steal)
+            print("Card stolen: ",card_from_steal)
             #got_card.set()
         elif message.startswith("Steal"):
             indexes = message.splitlines()[1]
             card_to_give = cards[int(indexes[0])][int(indexes[1])]
-            print(card_to_give)
+            print("Card to give: ",card_to_give)
             for pl in players_info:
                 player_info_s = players_info[0].split()
                 player_ip_s = player_info_s[1]
