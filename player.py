@@ -226,7 +226,7 @@ def receive_messages():
             print("Card to give: ",card_to_give)
             
             for pl in players_info:
-                player_info_s = players_info[0].split()
+                player_info_s = pl.split()
                 player_ip_s = player_info_s[1]
                 player_port_s = int(player_info_s[2])
                 print("TEST",player_info_s[0],"TEST")
