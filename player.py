@@ -160,6 +160,7 @@ def receive_messages():
                         sock_player.sendto(f"Steal\n{steal_position}\n{my_name}".encode('utf-8'), (player_ip_s, player_port_s))
                         message1, addr1 = sock_player.recvfrom(1024)
                         message1 = message1.decode('utf-8')
+                        print(message1)
                         if message1.startswith("Stolen Card"):
                             print("GOT CARD")
                             card_from_steal = message1.splitlines()[1]
