@@ -341,7 +341,7 @@ while True:
         
 
         # If the game starts successfully and you're the dealer
-        if command.startswith("start"):
+        if command.startswith("start") and message != "FAILURE":
             players_info = message.splitlines()[2:]  # Assume player info starts from the second line
             am_I_dealer = True
             game_started = True
