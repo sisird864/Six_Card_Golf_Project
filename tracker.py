@@ -70,7 +70,7 @@ def start_game(command, addr):
             dealer_tuple = i
 
     # Validate the command's parameters
-    if dealer_tuple == () or int(list1[3]) > len(free_players) or (int(list1[3]) < 1 or int(list1[3]) > 4) or (
+    if dealer_tuple == () or int(list1[3]) >= len(free_players) or (int(list1[3]) < 1 or int(list1[3]) > 4) or (
             int(list1[4]) < 1 or int(list1[4]) > 9):
         sock1.sendto("FAILURE".encode('utf-8'), (addr[0], addr[1]))
         return
